@@ -1,0 +1,6 @@
+[submodule "lib/ext4"]
+	path = lib/ext4
+	url = https://github.com/Android-Boot-Manager/droidboot_ext4
+[submodule "lib/lvgl"]
+	path = lib/lvgl
+	url = https://github.com/Android-Boot-Manager/droidboot_lvgl
