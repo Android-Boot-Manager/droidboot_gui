@@ -1,5 +1,6 @@
-
-typedef droidboot_log_level uint;
+#ifndef DROIDBOOT_LOGGING_H
+#define DROIDBOOT_LOGGING_H
+typedef unsigned int droidboot_log_level;
 
 void droidboot_log(droidboot_log_level log_level, const char *fmt, ...);
 
@@ -8,4 +9,4 @@ void droidboot_log(droidboot_log_level log_level, const char *fmt, ...);
 #define DROIDBOOT_LOG_WARNING 2
 #define DROIDBOOT_LOG_ERROR   3
 #define DROIDBOOT_LOG_FATAL   4
-
+#endif
