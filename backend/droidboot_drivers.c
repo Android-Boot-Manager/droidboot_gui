@@ -10,7 +10,7 @@ droidboot_ret droidboot_driver_init(){
     if(ret!=DROIDBOOT_EOK)
         return ret;
      
-    // Initi lvgl   
+    // Init lvgl   
     lv_init();
 
     // Set up frame buffer and disp
