@@ -3,7 +3,8 @@
 typedef unsigned int droidboot_ret;
 
 typedef enum droidboot_error {
-    DROIDBOOT_EPERM = 1,          /**< Not owner */
+    DROIDBOOT_EOK = 0,           /**< No errors */
+    DROIDBOOT_EPERM = 1,         /**< Not owner */
     DROIDBOOT_ENOENT = 2,        /**< No such file or directory */
     DROIDBOOT_ESRCH = 3,         /**< No such context */
     DROIDBOOT_EINTR = 4,         /**< Interrupted system call */
