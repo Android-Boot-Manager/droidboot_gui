@@ -8,7 +8,7 @@ droidboot_ret droidboot_driver_init(){
     // Run platform init
     ret = droidboot_platform_init();
     if(ret!=DROIDBOOT_EOK)
-        retutn ret;
+        return ret;
      
     // Initi lvgl   
     lv_init();
