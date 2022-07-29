@@ -1,9 +1,9 @@
-LOCAL_PATH := $(shell pwd)
+DROIDBOOT_GUI_LOCAL_PATH := $(GET_LOCAL_DIR)
 
-include $(LOCAL_PATH)/common/common.mk
-include $(LOCAL_PATH)/dualboot_gui/dualboot_gui.mk
-include $(LOCAL_PATH)/config_parser/config_parser.mk
-include $(LOCAL_PATH)/backend/backend.mk
-include $(LOCAL_PATH)/lib/lib.mk
+include $(DROIDBOOT_GUI_LOCAL_PATH)/common/common.mk
+include $(DROIDBOOT_GUI_LOCAL_PATH)/dualboot_gui/dualboot_gui.mk
+#include $(DROIDBOOT_GUI_LOCAL_PATH)/config_parser/config_parser.mk
+include $(DROIDBOOT_GUI_LOCAL_PATH)/backend/backend.mk
+include $(DROIDBOOT_GUI_LOCAL_PATH)/lib/lib.mk
 
-INCLUDES += "-I$(LOCAL_PATH)/include"
+INCLUDES += "-I$(DROIDBOOT_GUI_LOCAL_PATH)/include"

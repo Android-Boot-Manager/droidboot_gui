@@ -1,4 +1,6 @@
-LOCAL_PATH := $(shell pwd)
+DROIDBOOT_GUI_LIB_LOCAL_PATH := $(GET_LOCAL_DIR)
+LVGL_DIR := $(DROIDBOOT_GUI_LIB_LOCAL_PATH)
+LVGL_DIR_NAME := lvgl
 
-include $(LOCAL_PATH)/ext4/ext4.mk
-include $(LOCAL_PATH)/lvgl/lvgl.mk
+include $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/ext4/lwext4.mk
+include $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/lvgl/lvgl.mk
