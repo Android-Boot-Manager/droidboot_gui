@@ -1,10 +1,11 @@
 #include <lvgl.h>
+#include <droidboot_drivers.h>
 #include <droidboot_error.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
-#include <lib/ext4/ext4.h>
+#include <ext4.h>
 
-EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_settings_dev, 512, 0, droidboot_settings_dev_open,
-		droidboot_settings_dev_bread, droidboot_settings_dev_bwrite, droidboot_settings_dev_close, 0, 0); 
+EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
+		droidboot_platform_settings_dev_bread, droidboot_platform_settings_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0); 
 
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;
@@ -15,12 +16,13 @@ droidboot_ret droidboot_driver_init(){
         return ret;
 	
 	// Set up keys
+	lv_indev_drv_t indev_drv;
 	lv_indev_drv_init(&indev_drv);      /* Basic initialization */
     indev_drv.type = LV_INDEV_TYPE_KEYPAD;
     indev_drv.read_cb = droidboot_key_read;
     
     /* Register the driver in LVGL and save the created input device object */
-    lvgl_mtk_indev = lv_indev_drv_register(&indev_drv)
+    droidboot_lvgl_indev = lv_indev_drv_register(&indev_drv);
     
     // Init ext4 stuff
     droidboot_settings_dev.part_offset=droidboot_platform_get_storage_part_offset();

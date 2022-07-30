@@ -2,6 +2,9 @@
 #include <droidboot_error.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
 
+/*A static variable to store the buffers*/
+static lv_disp_draw_buf_t disp_buf;
+
 droidboot_error droidboot_lvgl_init(){
     lv_init();
     
@@ -13,7 +16,7 @@ droidboot_error droidboot_lvgl_init(){
 	static lv_disp_drv_t disp_drv;          /*A variable to hold the drivers. Must be static or global.*/
     lv_disp_drv_init(&disp_drv);            /*Basic initialization*/
 	disp_drv.draw_buf = &disp_buf;          /*Set an initialized buffer*/
-	disp_drv.flush_cb = lvgl_mtk_fb_flush;        /*Set a flush callback to draw to the display*/
+	disp_drv.flush_cb = droidboot_fb_flush;        /*Set a flush callback to draw to the display*/
 	disp_drv.hor_res = droidboot_get_display_width();                 /*Set the horizontal resolution in pixels*/
 	disp_drv.ver_res = droidboot_get_display_height();                 /*Set the vertical resolution in pixels*/
 

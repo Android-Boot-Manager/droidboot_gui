@@ -4,3 +4,6 @@
 [submodule "lib/lvgl"]
 	path = lib/lvgl
 	url = https://github.com/Android-Boot-Manager/droidboot_lvgl
+[submodule "droidboot_platforms"]
+	path = droidboot_platforms
+	url = https://github.com/Android-Boot-Manager/droidboot_platforms
