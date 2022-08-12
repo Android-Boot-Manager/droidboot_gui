@@ -15,6 +15,9 @@ droidboot_ret droidboot_driver_init(){
     if (ret!=DROIDBOOT_EOK)
         return ret;
 	
+	// Launch lvgl threads
+	droidboot_lvgl_threads_init();
+	
 	// Set up keys
 	lv_indev_drv_t indev_drv;
 	lv_indev_drv_init(&indev_drv);      /* Basic initialization */
