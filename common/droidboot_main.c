@@ -5,8 +5,8 @@
 
 void droidboot_init()
 {
-    droidboot_driver_init();
     droidboot_lvgl_init();
+    droidboot_driver_init();
 }
 
 droidboot_error droidboot_show_dualboot_menu()
