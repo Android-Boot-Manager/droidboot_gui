@@ -12,7 +12,7 @@ droidboot_error droidboot_lvgl_init(){
     static lv_color_t buf_1[720 * 30];
     if(droidboot_use_double_buffering()){
         static lv_color_t buf_2[720 * 30];
-        //lv_disp_draw_buf_init(&disp_buf, buf_1, buf_2, droidboot_get_display_width()*30);
+        lv_disp_draw_buf_init(&disp_buf, buf_1, buf_2, droidboot_get_display_width()*30);
     }
     else
         lv_disp_draw_buf_init(&disp_buf, buf_1, NULL, droidboot_get_display_width()*30);
