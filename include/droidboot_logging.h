@@ -1,5 +1,8 @@
 #ifndef DROIDBOOT_LOGGING_H
 #define DROIDBOOT_LOGGING_H
+#include <stdint.h>
+#include <sys/types.h>
+
 typedef unsigned int droidboot_log_level;
 
 void droidboot_log(droidboot_log_level log_level, const char *fmt, ...);

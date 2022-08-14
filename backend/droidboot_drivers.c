@@ -5,7 +5,7 @@
 #include <ext4.h>
 
 EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
-		droidboot_platform_settings_dev_bread, droidboot_platform_settings_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0); 
+		NULL, NULL, droidboot_platform_settings_dev_close, 0, 0); 
 
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;

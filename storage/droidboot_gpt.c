@@ -1,5 +1,7 @@
 #include <droidboot_error.h>
 #include <droidboot_logging.h>
+#include <sys/types.h>
+#include <droidboot_gpt.h>
 
 #define DROIDBOOT_ROUNDUP(a, b) (((a) + ((b)-1)) & ~((b)-1))
 #define DROIDBOOT_ROUNDDOWN(a, b) ((a) & ~((b)-1))
@@ -10,6 +12,28 @@
 /* allocate a buffer on the stack aligned and padded to the cpu's cache line size */
 #define DROIDBOOT_STACKBUF_DMA_ALIGN(var, size) \
 	uint8_t __##var[(size) + CACHE_LINE]; uint8_t *var = (uint8_t *)(DROIDBOOT_ROUNDUP((addr_t)__##var, CACHE_LINE))
+
+struct chs {
+	uint8_t c;
+	uint8_t h;
+	uint8_t s;
+};
+
+struct mbr_part {
+	uint8_t status;
+	struct chs start;
+	uint8_t type;
+	struct chs end;
+	uint32_t lba_start;
+	uint32_t lba_length;
+} __PACKED;
+
+struct gpt_header {
+	uint64_t first_usable_lba;
+	uint32_t partition_entry_size;
+	uint32_t header_size;
+	uint32_t max_partition_count;
+};
 	
 bool parse_done = false;
 
@@ -25,7 +49,7 @@ static status_t validate_mbr_partition(const struct mbr_part *part)
 	/* make sure the range fits within the device */
 	if (part->lba_start >= droidboot_sd_blkcnt())
 		return -1;
-	if ((part->lba_start + part->lba_length) > dev->block_count)
+	if ((part->lba_start + part->lba_length) > droidboot_sd_blkcnt())
 		return -1;
 
 	/* that's about all we can do, MBR has no other good way to see if it's valid */
@@ -66,8 +90,8 @@ droidboot_error droidboot_parse_gpt_on_sd()
     }
     
     // get a dma aligned and padded block to read info
-	STACKBUF_DMA_ALIGN(buf, droidboot_sd_blklen());
-	
+	//STACKBUF_DMA_ALIGN(buf, droidboot_sd_blklen());
+	char *buf = malloc(droidboot_sd_blklen()*2);
 	/* sniff for MBR partition types */
 	do {
 		unsigned int i, j, n;
@@ -103,11 +127,11 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		dridboot_sd_read_block(buf, droidboot_sd_blklen(), droidboot_sd_blklen());
 
 		struct gpt_header gpthdr;
-		err = partition_parse_gpt_header(buf, &gpthdr);
+		int err = partition_parse_gpt_header(buf, &gpthdr);
 		if (err) {
 			/* Check the backup gpt */
 
-			uint64_t backup_header_lba = dev->block_count - 1;
+			uint64_t backup_header_lba = droidboot_sd_blkcnt() - 1;
 			dridboot_sd_read_block(buf, (backup_header_lba * droidboot_sd_blklen()), droidboot_sd_blklen());
 
 			err = partition_parse_gpt_header(buf, &gpthdr);
@@ -117,7 +141,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 			}
 		}
 
-		uint32_t part_entry_cnt = dev->block_size / ENTRY_SIZE;
+		uint32_t part_entry_cnt = droidboot_sd_blklen() / ENTRY_SIZE;
 		uint64_t partition_0 = GET_LLWORD_FROM_BYTE(&buf[PARTITION_ENTRIES_OFFSET]);
 		/* Read GPT Entries */
 		for (i = 0; i < (ROUNDUP(gpthdr.max_partition_count, part_entry_cnt)) / part_entry_cnt; i++) {
