@@ -11,9 +11,9 @@ droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;
     
     // Run platform init
-    //ret = droidboot_platform_init();
-    //if (ret!=DROIDBOOT_EOK)
-    //    return ret;
+    ret = droidboot_platform_init();
+    if (ret!=DROIDBOOT_EOK)
+        return ret;
 	
 	// Set up keys
 	/*lv_indev_drv_t indev_drv;
@@ -26,7 +26,7 @@ droidboot_ret droidboot_driver_init(){
     
     // Launch lvgl threads
 	droidboot_lvgl_threads_init();
-	
+	droidboot_parse_gpt_on_sd();
     // Init ext4 stuff
    /* droidboot_settings_dev.part_offset=droidboot_platform_get_storage_part_offset();
     droidboot_settings_dev.bdif->ph_bcnt = droidboot_platform_get_storage_block_count();

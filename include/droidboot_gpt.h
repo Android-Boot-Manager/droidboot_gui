@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <droidboot_error.h>
+#include <droidboot_logging.h>
 #include <stdbool.h>
 
 #define PARTITION_TYPE_MBR         0
@@ -141,3 +143,5 @@
      *((x)+5) = (((y) >> 40) & 0xff);   \
      *((x)+6) = (((y) >> 48) & 0xff);   \
      *((x)+7) = (((y) >> 56) & 0xff);
+     
+droidboot_error droidboot_parse_gpt_on_sd();
