@@ -83,15 +83,13 @@ partition_parse_gpt_header(unsigned char *buffer, struct gpt_header* header)
 droidboot_error droidboot_parse_gpt_on_sd()
 {
     droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
-    video_printf("Enter droidboot_parse_gpt_on_sd\n");
 
     if(parse_done){
        droidboot_log(DROIDBOOT_LOG_WARNING, "droidboot_parse_gpt_on_sd was already used once\n"); 
-       //return DROIDBOOT_EOK;
+       return DROIDBOOT_EOK;
     }
     
     // get a dma aligned and padded block to read info
-	//STACKBUF_DMA_ALIGN(buf, droidboot_sd_blklen());
 	char *buf = malloc(droidboot_sd_blklen()*2);
 	/* sniff for MBR partition types */
 		unsigned int i, j, n;
@@ -106,13 +104,11 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		/* see if a partition table makes sense here */
 		struct mbr_part part[4];
 		memcpy(part, buf + 446, sizeof(part));
-        video_printf("SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
-//#if DEBUGLEVEL >= INFO
-		video_printf("mbr partition table dump:\n");
+        droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
+		droidboot_log(DROIDBOOT_LOG_INFO, "mbr partition table dump:\n");
 		for (i=0; i < 4; i++) {
-			video_printf("\t%i: status 0x%hhx, type 0x%hhx, start 0x%x, len 0x%x\n", i, part[i].status, part[i].type, part[i].lba_start, part[i].lba_length);
+			droidboot_log(DROIDBOOT_LOG_INFO, "\t%i: status 0x%hhx, type 0x%hhx, start 0x%x, len 0x%x\n", i, part[i].status, part[i].type, part[i].lba_start, part[i].lba_length);
 		}
-//#endif
 
 		/* validate each of the partition entries */
 		for (i=0; i < 4; i++) {
@@ -127,13 +123,13 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		}
 
 		if(!gpt_partitions_exist) return;
-		video_printf("found GPT\n");
+		droidboot_log(DROIDBOOT_LOG_INFO, "found GPT\n");
 
 		dridboot_sd_read_block(buf, 1, 1);
 
 		struct gpt_header gpthdr;
 		int err = partition_parse_gpt_header(buf, &gpthdr);
-		droidboot_dump_hex(DROIDBOOT_LOG_INFO, buf, 512);
+		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
 		if (err) {
 			/* Check the backup gpt */
 
@@ -142,7 +138,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 
 			err = partition_parse_gpt_header(buf, &gpthdr);
 			if (err) {
-				video_printf("GPT: Primary and backup signatures invalid\n");
+				droidboot_log(DROIDBOOT_LOG_ERROR, "GPT: Primary and backup signatures invalid\n");
 				return;
 			}
 		}
@@ -150,10 +146,10 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		uint32_t part_entry_cnt = droidboot_sd_blklen() / ENTRY_SIZE;
 		uint64_t partition_0 = GET_LLWORD_FROM_BYTE(&buf[PARTITION_ENTRIES_OFFSET]);
 		/* Read GPT Entries */
-		video_printf("Partition entries offset: %d\n", partition_0);
+		droidboot_log(DROIDBOOT_LOG_INFO, "Partition entries offset: %d\n", partition_0);
 		for (i = 0; i < (DROIDBOOT_ROUNDUP(gpthdr.max_partition_count, part_entry_cnt)) / part_entry_cnt; i++) {
 		    dridboot_sd_read_block(buf, 2 + i, 1);
-		    droidboot_dump_hex(DROIDBOOT_LOG_INFO, buf, 512);
+		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
 
 			for (j = 0; j < part_entry_cnt; j++) {
 				unsigned char type_guid[PARTITION_TYPE_GUID_SIZE];
@@ -189,10 +185,10 @@ droidboot_error droidboot_parse_gpt_on_sd()
 				}
 
                 if(strcmp(name, "abm_settings")==0){
-                   video_printf("FOUND abm settings\n");
+                   droidboot_log(DROIDBOOT_LOG_INFO, "FOUND abm settings\n");
                 }
                 
-				video_printf("got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
+				droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
 				// TODO: So something with this part
 			}
 		}  

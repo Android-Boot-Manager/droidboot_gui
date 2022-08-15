@@ -1,3 +1,4 @@
+#pragma once
 // DROIDBOOT_ON_SCREEN_LOG can be 1 or 0, enables droidboot related loggging on screen, only for debuggigng and early days.
 #define DROIDBOOT_ON_SCREEN_LOG 1
 
