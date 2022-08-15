@@ -1,11 +1,54 @@
 #include <lvgl.h>
+#include <ext4.h>
 #include <droidboot_drivers.h>
 #include <droidboot_error.h>
+#include <droidboot_gpt.h>
+#include <droidboot_config.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
-#include <ext4.h>
 
-EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
-		NULL, NULL, droidboot_platform_settings_dev_close, 0, 0); 
+
+// Next functions are only for lwext4, usually just wrappers
+static int droidboot_lwext_sd_dev_bread(struct ext4_blockdev *bdev, void *buf, uint32_t blk_id, uint32_t blk_cnt)
+{
+    droidboot_log(DROIDBOOT_LOG_INFO, "Going to read %d blocks at %d", blk_cnt, blk_id);
+    dridboot_sd_read_block(buf, blk_id, blk_cnt);
+    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
+    return DROIDBOOT_EOK;
+}
+
+static int droidboot_lwext_sd_dev_bwrite(struct ext4_blockdev *bdev, const void *buf,
+			  uint32_t blk_id, uint32_t blk_cnt){
+    dridboot_sd_write_block(buf, blk_id, blk_cnt);
+    return DROIDBOOT_EOK;
+}
+
+EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
+		 droidboot_lwext_sd_dev_bread, droidboot_lwext_sd_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0); 
+
+static char *entry_to_str(uint8_t type)
+{
+	switch (type) {
+	case EXT4_DE_UNKNOWN:
+		return "[unk] ";
+	case EXT4_DE_REG_FILE:
+		return "[fil] ";
+	case EXT4_DE_DIR:
+		return "[dir] ";
+	case EXT4_DE_CHRDEV:
+		return "[cha] ";
+	case EXT4_DE_BLKDEV:
+		return "[blk] ";
+	case EXT4_DE_FIFO:
+		return "[fif] ";
+	case EXT4_DE_SOCK:
+		return "[soc] ";
+	case EXT4_DE_SYMLINK:
+		return "[sym] ";
+	default:
+		break;
+	}
+	return "[???]";
+}
 
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;
@@ -26,12 +69,36 @@ droidboot_ret droidboot_driver_init(){
     
     // Launch lvgl threads
 	droidboot_lvgl_threads_init();
-	droidboot_parse_gpt_on_sd();
-    // Init ext4 stuff
-   /* droidboot_settings_dev.part_offset=droidboot_platform_get_storage_part_offset();
-    droidboot_settings_dev.bdif->ph_bcnt = droidboot_platform_get_storage_block_count();
-    droidboot_settings_dev.part_size = droidboot_platform_get_storage_size();
-    ext4_device_register(&droidboot_settings_dev, "droidboot_settings");*/
+	if(droidboot_parse_gpt_on_sd()==DROIDBOOT_EOK){
+	    droidboot_abm_settings_dev.part_offset = abm_settings_offset * 512;
+        droidboot_abm_settings_dev.bdif->ph_bcnt = abm_settings_blkcnt;
+        droidboot_abm_settings_dev.part_size = abm_settings_blkcnt*512;
+        ext4_device_register(&droidboot_abm_settings_dev, "abm_settings");
+        droidboot_log(DROIDBOOT_LOG_INFO, "Registered abm settings, offset %d, bcnt: %llu\n", abm_settings_offset, abm_settings_blkcnt);
+        if(DROIDBOOT_LOG_LEVEL==0){
+            droidboot_log(DROIDBOOT_LOG_TRACE, "going to mount abm settings\n");
+            int r=ext4_mount("abm_settings", "/meta/", false);
+            droidboot_log(DROIDBOOT_LOG_TRACE, "Ext4 mount returns: %d\n", r);
+            if(r==DROIDBOOT_EOK){
+                char sss[255];
+	            ext4_dir d;
+	            const ext4_direntry *de;
+
+	            droidboot_log(DROIDBOOT_LOG_TRACE, "ls %s\n", "/meta");
+
+	            //ext4_dir_open(&d, "/meta/");
+	            /*de = ext4_dir_entry_next(&d);
+
+	            while (de) {
+		            memcpy(sss, de->name, de->name_length);
+		            sss[de->name_length] = 0;
+		            droidboot_log(DROIDBOOT_LOG_TRACE, "  %s%s\n", entry_to_str(de->inode_type), sss);
+		            de = ext4_dir_entry_next(&d);
+	            }
+	            ext4_dir_close(&d);*/
+	        }
+        }
+	}
 
     return ret;
 }

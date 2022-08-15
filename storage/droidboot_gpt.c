@@ -186,10 +186,13 @@ droidboot_error droidboot_parse_gpt_on_sd()
 
                 if(strcmp(name, "abm_settings")==0){
                    droidboot_log(DROIDBOOT_LOG_INFO, "FOUND abm settings\n");
+                   abm_settings_offset=first_lba;
+                   abm_settings_blkcnt=size;
                 }
                 
 				droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
 				// TODO: So something with this part
 			}
 		}  
+    return DROIDBOOT_EOK;
 }
