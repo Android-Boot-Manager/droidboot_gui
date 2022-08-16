@@ -2,7 +2,7 @@ name: Update module
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: update
+    types: submodule-update
 jobs:
   update:
     runs-on: ubuntu-latest
