@@ -1,4 +1,4 @@
-name: Update module
+name: Update submodules on droidboot_gui
 on:
   workflow_dispatch:
   repository_dispatch:
