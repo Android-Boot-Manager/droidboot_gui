@@ -3,11 +3,14 @@ on: [ push, workflow_dispatch ]
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: ["Android-Boot-Manager/droidboot_device_volla_yggdrasil", "Android-Boot-Manager/droidboot_device_volla_yggdrasilx", "Android-Boot-Manager/droidboot_device_planet_astroslide"]
     steps:
       - name: Notify droidboot_device_* repo
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PAT }}
-          repository: "Android-Boot-Manager/droidboot_device_planet_astroslide"
-          event-type: update
+          repository: ${{ matrix.repo }}
+          event-type: submodule-update
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "module": "Android-Boot-Manager/droidboot_gui", "branch": "main"}'
