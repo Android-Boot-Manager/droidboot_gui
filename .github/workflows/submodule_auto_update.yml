@@ -1,0 +1,19 @@
+name: Update module
+on:
+  repository_dispatch:
+    types: update
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Update module
+        run: |
+          git submodule update --init --recursive --checkout -f --remote -- "${{github.event.client_payload.module}}"
+          git config --global user.name "Android Boot Manager (GH Actions)"
+          git config --global user.email "noreply@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "submodules_auto_update: ${{github.event.client_payload.module}} - ${{github.event.client_payload.sha}}"
+          git push
