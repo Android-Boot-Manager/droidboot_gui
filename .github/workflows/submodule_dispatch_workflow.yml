@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo: ["Android-Boot-Manager/droidboot_device_volla_yggdrasil", "Android-Boot-Manager/droidboot_device_volla_yggdrasilx", "Android-Boot-Manager/droidboot_device_planet_astroslide"]
+        repo: ["Android-Boot-Manager/droidboot_device_volla_yggdrasil", "Android-Boot-Manager/droidboot_device_volla_yggdrasilx", "Android-Boot-Manager/droidboot_device_planet_astroslide", "Android-Boot-Manager/droidboot_device_volla_mimameid"]
     steps:
       - name: Notify droidboot_device_* repo
         uses: peter-evans/repository-dispatch@v2
