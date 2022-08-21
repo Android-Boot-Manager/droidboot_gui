@@ -86,8 +86,8 @@ droidboot_ret droidboot_driver_init(){
 
 	            droidboot_log(DROIDBOOT_LOG_TRACE, "ls %s\n", "/meta");
 
-	            //ext4_dir_open(&d, "/meta/");
-	            /*de = ext4_dir_entry_next(&d);
+	            ext4_dir_open(&d, "/meta/");
+	            de = ext4_dir_entry_next(&d);
 
 	            while (de) {
 		            memcpy(sss, de->name, de->name_length);
@@ -95,7 +95,7 @@ droidboot_ret droidboot_driver_init(){
 		            droidboot_log(DROIDBOOT_LOG_TRACE, "  %s%s\n", entry_to_str(de->inode_type), sss);
 		            de = ext4_dir_entry_next(&d);
 	            }
-	            ext4_dir_close(&d);*/
+	            ext4_dir_close(&d);
 	        }
         }
 	}
