@@ -1,2 +1,3 @@
 #pragma once
-droidboot_init();
+
+void droidboot_init();
