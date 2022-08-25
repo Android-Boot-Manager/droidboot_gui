@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0+
 // © 2019 Mis012
 // © 2020-2022 luka177
+// © 2022 Hallo Welt Systeme UG
+// © 2022 luka177
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <err.h>
 #include <droidboot_config.h>
+#include <droidboot_logging.h>
 
 #include <ext4.h>
 
@@ -61,7 +64,7 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
 	char *path = malloc(strlen(file) + strlen(ENTRIES_DIR) + strlen("/") + 1);
 	strcpy(path, ENTRIES_DIR);
 	strcat(path, file);
-    video_printf("Going to parse file: %s\n", path);
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: Going to parse file: %s\n", path);
     ret=ext4_fopen (&fp, path, "r");
     ext4_fseek(&fp, 0, SEEK_END);
     off_t entry_file_size = ext4_ftell(&fp);
@@ -71,13 +74,11 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
 	if(!buf)
 		return ERR_NO_MEMORY;
 
-    video_printf("Alloc buf ok\n");
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: Alloc entr buf ok\n");
     
 	ext4_fread(&fp, buf, entry_file_size, &rb);
 	
 	ret = ext4_fclose(&fp);
-
-    video_printf("fs_close_file ret: %d\n", ret);
     
     if(ret) {
 		free(buf);
@@ -85,47 +86,45 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
 	}
 
 	buf[entry_file_size] = '\0';
-	
-	//video_printf("File read done, buf:%s\n", buf);
 
 	ret = config_parse_option(&entry->title, "title", (const char *)buf);
 	if(ret < 0) {
-		video_printf("SYNTAX ERROR: entry \"%s\" - no option 'title'\n", path);
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'title'\n", path);
 		free(buf);
 		return ret;
 	}
 
 	ret = config_parse_option(&entry->linux, "linux", (const char *)buf);
 	if(ret < 0) {
-		video_printf("SYNTAX ERROR: entry \"%s\" - no option 'linux'\n", path);
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'linux'\n", path);
 		free(buf);
 		return ret;
 	}
 
 	ret = config_parse_option(&entry->initrd, "initrd", (const char *)buf);
 	if(ret < 0) {
-		video_printf("SYNTAX ERROR: entry \"%s\" - no option 'initrd'\n", path);
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'initrd'\n", path);
 		free(buf);
 		return ret;
 	}
 
 	ret = config_parse_option(&entry->dtb, "dtb", (const char *)buf);
 	if(ret < 0) {
-		video_printf("SYNTAX ERROR: entry \"%s\" - no option 'dtb'\n", path);
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'dtb'\n", path);
 		free(buf);
 		return ret;
 	}
 
 	ret = config_parse_option(&entry->options, "options", (const char *)buf);
 	if(ret < 0) {
-		video_printf("SYNTAX ERROR: entry \"%s\" - no option 'options'\n", path);
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'options'\n", path);
 		free(buf);
 		return ret;
 	}
 	
 	ret = config_parse_option(&entry->logo, "logo", (const char *)buf);
 	if(ret < 0) {
-	    video_printf("SYNTAX ERROR: entry \"%s\" - no option 'logo'\n", path);
+	    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'logo'\n", path);
 		ret=0;
 		entry->logo="NULL";
 	}
@@ -158,17 +157,17 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
 
     ret=ext4_dir_open (&d, ENTRIES_DIR);
     if(ret!=0){
-        video_printf("Dir open failed: %d\n", ret);
+        droidboot_log(DROIDBOOT_LOG_ERROR, "config_parser: entries dir open failed: %d\n", ret);
         mdelay(1000);
     }
     de = ext4_dir_entry_next(&d);
 	int i = 0;
 	while(de) {
-	     video_printf("Found direntry\n");
+	     droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: Found direntry in entries dir\n");
          if(de->inode_type==1){
             struct boot_entry *entry = (entry_list+i);
             ret = parse_boot_entry_file(entry, de->name);
-            video_printf("Found file\n");
+            droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: found file in entries dir\n");
             if(ret < 0) {
                 entry->error = true;
                 entry->title = "SYNTAX ERROR";
@@ -182,7 +181,7 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
 	ext4_dir_close(&d);
     
    *_entry_list = entry_list;
-    video_printf("First entry is: %s\n", entry_list->title);
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: First entry is: %s\n", entry_list->title);
 	return 0;
 }
 
@@ -195,7 +194,7 @@ int parse_global_config(struct global_config *global_config) {
     if(ret!=0){
         global_config->default_entry_title = NULL;
 		global_config->timeout = 20;
-        video_printf("No global config\n");
+        droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: no global config found\n");
 		return 0;
     
     }
@@ -209,7 +208,7 @@ int parse_global_config(struct global_config *global_config) {
 	ext4_fread(&fp, buf, fsize, NULL);
 
 	ext4_fclose(&fp);
-video_printf("fread done\n");
+
 	ret = config_parse_option(&global_config->default_entry_title, "default", (const char *)buf);
 	if(ret < 0) {
 
@@ -219,11 +218,11 @@ video_printf("fread done\n");
 
 		return 0;
 	}
-    video_printf("default parse done\n");
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: default config parse done\n");
 	char *timeout = NULL;
 	ret = config_parse_option(&timeout, "timeout", (const char *)buf);
 
 	global_config->timeout = atoi(timeout);
-    video_printf("Timeout is: %d seconds\n", atoi(timeout));
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", atoi(timeout));
 	return 0;
 } 
