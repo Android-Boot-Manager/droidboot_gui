@@ -16,7 +16,7 @@ void droidboot_init()
     droidboot_driver_init();
 }
 
-droidboot_error droidboot_show_dualboot_menu()
+void droidboot_show_dualboot_menu()
 {
     /*droidboot_error ret = droidboot_check_metadata();
     if(ret)
@@ -25,8 +25,9 @@ droidboot_error droidboot_show_dualboot_menu()
     
     
     //Parse config
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: going to parse configs");
     droidboot_error ret = parse_boot_entries(&droidboot_entry_list);
-    
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: parse configs done");
     // Parse global config
     droidboot_global_config = malloc(sizeof(struct global_config));
     parse_global_config(droidboot_global_config);

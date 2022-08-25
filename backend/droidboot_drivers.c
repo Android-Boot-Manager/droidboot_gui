@@ -10,9 +10,7 @@
 // Next functions are only for lwext4, usually just wrappers
 static int droidboot_lwext_sd_dev_bread(struct ext4_blockdev *bdev, void *buf, uint32_t blk_id, uint32_t blk_cnt)
 {
-    droidboot_log(DROIDBOOT_LOG_INFO, "Going to read %d blocks at %d", blk_cnt, blk_id);
     dridboot_sd_read_block(buf, blk_id, blk_cnt);
-    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
     return DROIDBOOT_EOK;
 }
 
@@ -77,16 +75,16 @@ droidboot_ret droidboot_driver_init(){
         droidboot_log(DROIDBOOT_LOG_INFO, "Registered abm settings, offset %d, bcnt: %llu\n", abm_settings_offset, abm_settings_blkcnt);
         if(DROIDBOOT_LOG_LEVEL==0){
             droidboot_log(DROIDBOOT_LOG_TRACE, "going to mount abm settings\n");
-            int r=ext4_mount("abm_settings", "/meta/", false);
+            int r=ext4_mount("abm_settings", "/boot/", false);
             droidboot_log(DROIDBOOT_LOG_TRACE, "Ext4 mount returns: %d\n", r);
             if(r==DROIDBOOT_EOK){
                 char sss[255];
 	            ext4_dir d;
 	            const ext4_direntry *de;
 
-	            droidboot_log(DROIDBOOT_LOG_TRACE, "ls %s\n", "/meta");
+	            droidboot_log(DROIDBOOT_LOG_TRACE, "ls %s\n", "/boot");
 
-	            ext4_dir_open(&d, "/meta/");
+	            ext4_dir_open(&d, "/boot/");
 	            de = ext4_dir_entry_next(&d);
 
 	            while (de) {
@@ -96,6 +94,7 @@ droidboot_ret droidboot_driver_init(){
 		            de = ext4_dir_entry_next(&d);
 	            }
 	            ext4_dir_close(&d);
+	           // ext4_umount("/boot/");
 	        }
         }
 	}

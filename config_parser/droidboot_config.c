@@ -10,6 +10,7 @@
 #include <err.h>
 #include <droidboot_config.h>
 #include <droidboot_logging.h>
+#include <droidboot_error.h>
 
 #include <ext4.h>
 
@@ -147,7 +148,15 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
 
     struct boot_entry *entry_list=malloc(sizeof(struct boot_entry)*dir_count_entries(ENTRIES_DIR));    
 
+    //ret=ext4_mount("abm_settings", "/boot/", false);
+   // if(ret!=DROIDBOOT_EOK)
+   // {
+    //    droidboot_log(DROIDBOOT_LOG_ERROR, "config_parser: failed to mount abm_settings, mount ret: %d\n", ret);
+    //    return ret;
+   // }
+
 	ret = entry_count = dir_count_entries(ENTRIES_DIR);
+	droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: found %d entries\n");
 	if (ret < 0) {
 		entry_count = 0;
 	}
@@ -160,6 +169,7 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
         droidboot_log(DROIDBOOT_LOG_ERROR, "config_parser: entries dir open failed: %d\n", ret);
         mdelay(1000);
     }
+    droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: entries dir open ok\n");
     de = ext4_dir_entry_next(&d);
 	int i = 0;
 	while(de) {
@@ -182,6 +192,7 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
     
    *_entry_list = entry_list;
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: First entry is: %s\n", entry_list->title);
+    //ext4_umount("/boot/");
 	return 0;
 }
 
@@ -189,6 +200,13 @@ int parse_global_config(struct global_config *global_config) {
 	int ret;
 	ext4_file fp;
 	unsigned char *buf;
+
+    //ret=ext4_mount("abm_settings", "/boot/", false);
+    //if(ret!=DROIDBOOT_EOK)
+    //{
+    //    droidboot_log(DROIDBOOT_LOG_ERROR, "config_parser: failed to mount abm_settings, mount ret: %d\n", ret);
+    //    return ret;
+    //}
 
     ret = ext4_fopen (&fp, GLOBAL_CONFIG_FILE, "r");
     if(ret!=0){
@@ -224,5 +242,6 @@ int parse_global_config(struct global_config *global_config) {
 
 	global_config->timeout = atoi(timeout);
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", atoi(timeout));
+    //ext4_umount("/boot/");
 	return 0;
 } 
