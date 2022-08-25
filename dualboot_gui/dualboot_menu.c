@@ -169,7 +169,7 @@ void droidboot_add_dualboot_menu_buttons(list1){
 	lv_obj_set_align(timeout_label, LV_ALIGN_RIGHT_MID);
 }
 
-droidboot_ret droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, struct global_config *droidboot_global_config1, int droidboot_num_of_boot_entries1)
+void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, struct global_config *droidboot_global_config1, int droidboot_num_of_boot_entries1)
 {
     droidboot_entry_list = droidboot_entry_list1;
     droidboot_global_config = droidboot_global_config1;
