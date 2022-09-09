@@ -129,7 +129,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 
 		struct gpt_header gpthdr;
 		int err = partition_parse_gpt_header(buf, &gpthdr);
-		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
+		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);
 		if (err) {
 			/* Check the backup gpt */
 
@@ -149,7 +149,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		droidboot_log(DROIDBOOT_LOG_INFO, "Partition entries offset: %d\n", partition_0);
 		for (i = 0; i < (DROIDBOOT_ROUNDUP(gpthdr.max_partition_count, part_entry_cnt)) / part_entry_cnt; i++) {
 		    dridboot_sd_read_block(buf, 2 + i, 1);
-		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 512);
+		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);
 
 			for (j = 0; j < part_entry_cnt; j++) {
 				unsigned char type_guid[PARTITION_TYPE_GUID_SIZE];
