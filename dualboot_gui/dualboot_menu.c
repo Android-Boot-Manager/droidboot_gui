@@ -171,18 +171,14 @@ void droidboot_add_dualboot_menu_buttons(list1){
 
 void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, struct global_config *droidboot_global_config1, int droidboot_num_of_boot_entries1)
 {
+    droidboot_log(DROIDBOOT_LOG_INFO, "Enter draw dualboot menu\n");
     droidboot_entry_list = droidboot_entry_list1;
     droidboot_global_config = droidboot_global_config1;
     droidboot_num_of_boot_entries = droidboot_num_of_boot_entries1;
-
-    lv_scr_load(dualboot_menu);
-    lv_obj_del(boot_logo);
-    lv_obj_del(setup_main);
     
-    lv_group_t * droidboot_dualboot_menu_group = lv_group_create();
-    lv_group_set_default(droidboot_dualboot_menu_group);
-
-    lv_indev_set_group(droidboot_lvgl_indev, droidboot_dualboot_menu_group);
+   // lv_scr_load(dualboot_menu);
+    //lv_obj_del(boot_logo);
+    //lv_obj_del(setup_main);
     
     lv_obj_t * win = lv_win_create(lv_scr_act(), lv_pct(6));
     lv_obj_set_pos(win, 0, 0);

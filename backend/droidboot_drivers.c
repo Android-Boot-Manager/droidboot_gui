@@ -55,15 +55,17 @@ droidboot_ret droidboot_driver_init(){
     ret = droidboot_platform_init();
     if (ret!=DROIDBOOT_EOK)
         return ret;
-	
-	// Set up keys
-	/*lv_indev_drv_t indev_drv;
-	lv_indev_drv_init(&indev_drv);*/      /* Basic initialization */
-    //indev_drv.type = LV_INDEV_TYPE_KEYPAD;
-    //indev_drv.read_cb = droidboot_key_read;
     
-    /* Register the driver in LVGL and save the created input device object */
-   // droidboot_lvgl_indev = lv_indev_drv_register(&indev_drv);
+    static lv_indev_drv_t indev_drv1;
+    lv_indev_drv_init(&indev_drv1);      /*Basic initialization*/
+    indev_drv1.type =LV_INDEV_TYPE_KEYPAD;                /*See below.*/
+    indev_drv1.read_cb =droidboot_key_read;            /*See below.*/
+    /*Register the driver in LVGL and save the created input device object*/
+    lv_indev_t * droidboot_indev = lv_indev_drv_register(&indev_drv1);
+    
+    lv_group_t * droidboot_group = lv_group_create(); 
+    lv_group_set_default(droidboot_group);
+    lv_indev_set_group(droidboot_indev, droidboot_group);
     
     // Launch lvgl threads
 	droidboot_lvgl_threads_init();
