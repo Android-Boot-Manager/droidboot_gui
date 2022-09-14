@@ -5,6 +5,7 @@
 #include <droidboot_drivers.h>
 #include <droidboot_screens.h>
 #include <droidboot_config_parser.h>
+#include <droidboot_dualboot_backend.h>
 
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
@@ -199,7 +200,8 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     }
     lv_timer_del(timer);
     if(exit==1){
-        //droidboot_boot_linux_from_ext4(selected_entry);
+        droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit, boot second OS\n");
+        droidboot_boot_linux_from_ext4(selected_entry);
     }
     droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit\n");
 }

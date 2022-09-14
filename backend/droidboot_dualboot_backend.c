@@ -20,6 +20,8 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     char *initrd;
     char *dtb;
     char *options;
+    unsigned char *kernel_raw;
+    unsigned char *ramdisk_raw;
     linux = malloc(strlen("/boot/") + strlen(entry->linux) + 1);
 	initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
@@ -32,10 +34,14 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	strcat(dtb, entry->dtb);
 	strcpy(options, entry->options);
 	video_printf("booting from ext2 partition 'system'\n");
-    
-    ext4_fopen (&fp, linux, "r");
+
+    if(ext4_fopen (&fp, linux, "r")!=0)
+    {
+        video_printf("Failed to open linux( %s\n", linux);
+    }
     ext4_fseek(&fp, 0, SEEK_END);
 	kernel_raw_size = ext4_ftell(&fp);
+	video_printf("%s size %d\n", linux, kernel_raw_size);
 	ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
 	if(!kernel_raw_size) {
 		video_printf("kernbel get size failed, path: %s\n, ramdisk path:%s",linux, initrd);
@@ -43,12 +49,16 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	}
 	
     video_printf("kernel get size done\n");
-    
-    unsigned char *kernel_raw = malloc(kernel_raw_size);
-	if(ext4_fread(&fp, kernel_raw, kernel_raw_size, &rb) < 0) {
+    if(droidboot_get_kernel_load_addr()==NULL)
+        kernel_raw = malloc(kernel_raw_size);
+    else
+        kernel_raw = droidboot_get_kernel_load_addr();
+    video_printf("malloc done\n");
+	if(ext4_fread(&fp, kernel_raw, kernel_raw_size, NULL) < 0) {
 		video_printf("kernel load failed\n");
 		return -1;
 	}
+	video_printf("kernel load ok\n");
 	ext4_fclose(&fp);
     video_printf("kernel load ok\n");
     droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)kernel_raw, 16);
@@ -62,7 +72,11 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 		return -1;
 	}
     video_printf("ramdisk get size ok\n");
-    unsigned char *ramdisk_raw = malloc(ramdisk_size);
+    if(droidboot_get_kernel_load_addr()==NULL)
+        ramdisk_raw = malloc(ramdisk_size);
+    else
+        ramdisk_raw = droidboot_get_ramdisk_load_addr();
+
 	if(ext4_fread(&fp, ramdisk_raw, ramdisk_size, &rb) < 0) {
 	video_printf("ramdisk load failed\n");
         return -1;
@@ -70,13 +84,6 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	ext4_fclose(&fp);
 	droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)ramdisk_raw, 16);
     video_printf("ramdisk load ok\n");
-
-
-    	video_printf("loading done\n");
-   
-	/* pass related root of trust info via SMC call */
-	//send_root_of_trust_info();
-	//set_boot_phase(BOOT_PHASE_KERNEL);
 
     // time to umount fs
     ext4_cache_write_back("/boot/", 0);
