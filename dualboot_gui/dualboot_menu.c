@@ -201,4 +201,5 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     if(exit==1){
         //droidboot_boot_linux_from_ext4(selected_entry);
     }
+    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit\n");
 }
