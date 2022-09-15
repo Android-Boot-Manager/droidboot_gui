@@ -72,9 +72,13 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 		return -1;
 	}
     video_printf("ramdisk get size ok\n");
-    if(droidboot_get_kernel_load_addr()==NULL)
+    if(droidboot_get_ramdisk_load_addr()==NULL){
         ramdisk_raw = malloc(ramdisk_size);
-    else
+        if(droidboot_append_ramdisk_to_kernel())
+        {
+           ramdisk_raw = kernel_raw+kernel_raw_size;
+        }
+    } else
         ramdisk_raw = droidboot_get_ramdisk_load_addr();
 
 	if(ext4_fread(&fp, ramdisk_raw, ramdisk_size, &rb) < 0) {
