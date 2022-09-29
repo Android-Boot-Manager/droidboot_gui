@@ -121,17 +121,15 @@ void droidboot_add_dualboot_menu_buttons(list1){
         strcat(title, (droidboot_entry_list + i)->title);
         strcat(title, "\n");
 
-        // TODO: implement icons stuff here
-        /*if((droidboot_entry_list + i)->logo!="NULL"){
-            //img_dscs[i] = malloc(sizeof(lv_img_dsc_t));     // image descriptor struct
+        if((droidboot_entry_list + i)->logo!="NULL"){
             char logo_path[strlen((droidboot_entry_list + i)->logo)+strlen("/boot/"+3)];
             strcpy(logo_path, "/boot/");
             strcat(logo_path, (droidboot_entry_list + i)->logo);
 
-            list_btn = lv_list_add_btn(list1,  droidboot_load_image_from_ext4(logo_path), title);
-        } else {*/
+            list_btn = lv_list_add_btn(list1,  droidboot_load_lvgl_image_from_ext4(logo_path), title);
+        } else {
             list_btn = lv_list_add_btn(list1, NULL, title);
-        //}
+        }
 
         lv_obj_add_event_cb(list_btn, event_handler, LV_EVENT_CLICKED, NULL);
         lv_obj_add_event_cb(list_btn, disable_autoboot_func, LV_EVENT_DEFOCUSED, NULL);
