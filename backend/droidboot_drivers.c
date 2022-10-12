@@ -6,6 +6,7 @@
 #include <droidboot_config.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
 
+bool sdfail;
 
 // Next functions are only for lwext4, usually just wrappers
 static int droidboot_lwext_sd_dev_bread(struct ext4_blockdev *bdev, void *buf, uint32_t blk_id, uint32_t blk_cnt)
@@ -50,7 +51,7 @@ static char *entry_to_str(uint8_t type)
 
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;
-    
+    sdfail=false;
     // Run platform init
     ret = droidboot_platform_init();
     if (ret!=DROIDBOOT_EOK)
@@ -75,31 +76,20 @@ droidboot_ret droidboot_driver_init(){
         droidboot_abm_settings_dev.part_size = abm_settings_blkcnt*512;
         ext4_device_register(&droidboot_abm_settings_dev, "abm_settings");
         droidboot_log(DROIDBOOT_LOG_INFO, "Registered abm settings, offset %d, bcnt: %llu\n", abm_settings_offset, abm_settings_blkcnt);
-        if(DROIDBOOT_LOG_LEVEL==0){
-            droidboot_log(DROIDBOOT_LOG_TRACE, "going to mount abm settings\n");
-            int r=ext4_mount("abm_settings", "/boot/", false);
-            droidboot_log(DROIDBOOT_LOG_TRACE, "Ext4 mount returns: %d\n", r);
-            if(r==DROIDBOOT_EOK){
-                char sss[255];
-	            ext4_dir d;
-	            const ext4_direntry *de;
-
-	            droidboot_log(DROIDBOOT_LOG_TRACE, "ls %s\n", "/boot");
-
-	            ext4_dir_open(&d, "/boot/");
-	            de = ext4_dir_entry_next(&d);
-
-	            while (de) {
-		            memcpy(sss, de->name, de->name_length);
-		            sss[de->name_length] = 0;
-		            droidboot_log(DROIDBOOT_LOG_TRACE, "  %s%s\n", entry_to_str(de->inode_type), sss);
-		            de = ext4_dir_entry_next(&d);
-	            }
-	            ext4_dir_close(&d);
-	           // ext4_umount("/boot/");
-	        }
+        droidboot_log(DROIDBOOT_LOG_TRACE, "going to mount abm settings\n");
+        int r=ext4_mount("abm_settings", "/boot/", false);
+        if(r!=DROIDBOOT_EOK){
+            sdfail=true;
         }
+        droidboot_log(DROIDBOOT_LOG_TRACE, "Ext4 mount returns: %d\n", r);
+	} else {
+	    sdfail=true;
 	}
 
     return ret;
+}
+
+bool droidboot_get_sd_fail()
+{
+    return sdfail;
 }

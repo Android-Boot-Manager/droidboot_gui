@@ -4,6 +4,7 @@
 #include <droidboot_init.h>
 #include <droidboot_config_parser.h>
 #include <droidboot_logging.h>
+#include <droidboot_drivers.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
 
 struct boot_entry *droidboot_entry_list;
@@ -23,7 +24,10 @@ void droidboot_show_dualboot_menu()
         return ret;
    */
     
-    
+    // If there is no SD card or we cant mount abm_settings for unknown reason just boot from storage
+    if(droidboot_get_sd_fail())
+        return;
+
     //Parse config
     droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: going to parse configs");
     droidboot_error ret = parse_boot_entries(&droidboot_entry_list);

@@ -85,10 +85,13 @@ droidboot_error droidboot_parse_gpt_on_sd()
     droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
 
     if(parse_done){
-       droidboot_log(DROIDBOOT_LOG_WARNING, "droidboot_parse_gpt_on_sd was already used once\n"); 
        return DROIDBOOT_EOK;
     }
-    
+    if(!droidboot_sd_exists()){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot_parse_gpt_on_sd: sd card is not present\n");
+        return DROIDBOOT_ENOENT;
+    }
+
     // get a dma aligned and padded block to read info
 	char *buf = malloc(droidboot_sd_blklen()*2);
 	/* sniff for MBR partition types */
