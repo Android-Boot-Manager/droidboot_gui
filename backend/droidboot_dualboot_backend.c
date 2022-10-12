@@ -22,6 +22,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     char *options;
     unsigned char *kernel_raw;
     unsigned char *ramdisk_raw;
+    unsigned char *dtb_raw;
     linux = malloc(strlen("/boot/") + strlen(entry->linux) + 1);
 	initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
@@ -61,6 +62,8 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	ext4_fclose(&fp);
     droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)kernel_raw, 16);
 
+    droidboot_pre_ramdisk_load(kernel_raw, kernel_raw_size);
+
     ext4_fopen (&fp, initrd, "r");
     ext4_fseek(&fp, 0, SEEK_END);
 	ramdisk_size = ext4_ftell(&fp);
@@ -86,9 +89,31 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	ext4_fclose(&fp);
 	droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)ramdisk_raw, 16);
     droidboot_log(DROIDBOOT_LOG_TRACE, "ramdisk load ok\n");
+    
+    if(droidboot_get_dtb_load_addr()!=NULL){
+        dtb_raw=droidboot_get_dtb_load_addr();
+        droidboot_log(DROIDBOOT_LOG_ERROR, "going to load dtb\n");
+        ext4_fopen (&fp, dtb, "r");
+        ext4_fseek(&fp, 0, SEEK_END);
+	    dtb_size = ext4_ftell(&fp);
+	    ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
+	    if (!dtb_size) {
+	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed\n");
+		    return -1;
+	    }
+	    droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed\n");
+	    if(ext4_fread(&fp, dtb_raw, dtb_size, &rb) < 0) {
+	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb load failed\n");
+           return -1;
+	    }
+	    droidboot_log(DROIDBOOT_LOG_TRACE, "dtb load done\n");
+    } else {
+        dtb_size=NULL;
+        dtb_raw=NULL;
+    }
 
     // time to umount fs
     ext4_cache_write_back("/boot/", 0);
     ext4_umount("/boot/");
-	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, NULL, NULL, options);
+	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, dtb_raw, dtb_size, options);
 }
