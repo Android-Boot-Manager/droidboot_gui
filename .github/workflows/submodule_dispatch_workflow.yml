@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        fail-fast: false
         repo: [
           "Android-Boot-Manager/droidboot_device_volla_yggdrasil",
           "Android-Boot-Manager/droidboot_device_planet_astroslide",
