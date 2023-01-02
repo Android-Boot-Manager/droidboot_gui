@@ -8,7 +8,7 @@ struct global_config {
 
 struct boot_entry {
 	char *title;
-	char *linux;
+	char *kernel;
 	char *initrd;
     char *dtb;
 	char *options;

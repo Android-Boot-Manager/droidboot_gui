@@ -1,4 +1,4 @@
 #pragma once
 
-void droidboot_init();
-void droidboot_show_dualboot_menu();
+void droidboot_init(void);
+void droidboot_show_dualboot_menu(void);

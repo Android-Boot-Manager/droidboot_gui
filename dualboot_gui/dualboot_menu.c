@@ -6,6 +6,7 @@
 #include <droidboot_screens.h>
 #include <droidboot_config_parser.h>
 #include <droidboot_dualboot_backend.h>
+#include <droidboot_stdfunc.h>
 
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
@@ -16,9 +17,9 @@ lv_obj_t *timeout_label;
 bool no_autoboot;
 lv_timer_t * timer;
 
-struct boot_entry *droidboot_entry_list;
-struct global_config *droidboot_global_config;
-int droidboot_num_of_boot_entries;
+extern struct boot_entry *droidboot_entry_list;
+extern struct global_config *droidboot_global_config;
+extern int droidboot_num_of_boot_entries;
 
 struct boot_entry *selected_entry;
 
@@ -39,7 +40,7 @@ static void event_handler(lv_event_t * e)
         ret=ext4_fwrite(&f, s, 128, 0);
         ret=ext4_fclose(&f);
         
-        if(!strcmp((droidboot_entry_list + index)->linux, "null"))
+        if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
             droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: Linux is null");   
             exit=0;
@@ -92,9 +93,9 @@ void timeout_handler(lv_timer_t * timer)
         ret=ext4_fclose(&fp);
 	
         droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: last entry is: %s\n", buf);
-        int index = atoi(buf);
+        int index = droidboot_atoi(buf);
         
-        if(!strcmp((droidboot_entry_list + index)->linux, "null"))
+        if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
             droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: linux is null");   
             exit=0;
@@ -156,7 +157,7 @@ void droidboot_add_dualboot_menu_buttons(list1){
 	ret=ext4_fclose(&fp);
 	
 	droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: last entry is: %s\n", buf);
-	int index = atoi(buf);
+	int index = droidboot_atoi(buf);
 	list_btn=lv_obj_get_child(list1, index);
 	lv_group_focus_obj(list_btn);
 	timeout_label = lv_label_create(list_btn);

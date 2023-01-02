@@ -16,19 +16,19 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	unsigned int dev_null;
 	size_t rb;
 	ext4_file fp;
-	char *linux;
+	char *kernel;
     char *initrd;
     char *dtb;
     char *options;
     unsigned char *kernel_raw;
     unsigned char *ramdisk_raw;
     unsigned char *dtb_raw;
-    linux = malloc(strlen("/boot/") + strlen(entry->linux) + 1);
+    kernel = malloc(strlen("/boot/") + strlen(entry->kernel) + 1);
 	initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
     options = malloc(strlen(entry->options) + 1);
-    strcpy(linux, "/boot/");
-	strcat(linux, entry->linux);
+    strcpy(kernel, "/boot/");
+	strcat(kernel, entry->kernel);
 	strcpy(initrd, "/boot/");
 	strcat(initrd, entry->initrd);
     strcpy(dtb, "/boot/");
@@ -36,15 +36,15 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	strcpy(options, entry->options);
 	droidboot_log(DROIDBOOT_LOG_TRACE, "booting from ext4 partition 'abm_settings'\n");
 
-    if(ext4_fopen (&fp, linux, "r")!=0)
-        droidboot_log(DROIDBOOT_LOG_ERROR, "Failed to open linux( %s\n", linux);
+    if(ext4_fopen (&fp, kernel, "r")!=0)
+        droidboot_log(DROIDBOOT_LOG_ERROR, "Failed to open linux( %s\n", kernel);
 
     ext4_fseek(&fp, 0, SEEK_END);
 	kernel_raw_size = ext4_ftell(&fp);
-	droidboot_log(DROIDBOOT_LOG_INFO, "%s size %d\n", linux, kernel_raw_size);
+	droidboot_log(DROIDBOOT_LOG_INFO, "%s size %d\n", kernel, kernel_raw_size);
 	ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
 	if(!kernel_raw_size) {
-		droidboot_log(DROIDBOOT_LOG_ERROR, "kernnel get size failed, path: %s\n, ramdisk path:%s",linux, initrd);
+		droidboot_log(DROIDBOOT_LOG_ERROR, "kernnel get size failed, path: %s\n, ramdisk path:%s",kernel, initrd);
 		return -1;
 	}
 	

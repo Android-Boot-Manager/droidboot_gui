@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <err.h>
 #include <droidboot_config.h>
 #include <droidboot_logging.h>
 #include <droidboot_error.h>
+#include <droidboot_stdfunc.h>
 
 #include <ext4.h>
 
@@ -19,7 +19,7 @@
 
 struct boot_entry {
 	char *title;
-	char *linux;
+	char *kernel;
 	char *initrd;
     char *dtb;
 	char *options;
@@ -46,7 +46,7 @@ int config_parse_option(char **_dest, const char *option, const char *buffer) {
 		*newline = '\0';
 	char *dest = malloc(strlen(temp) + 1);
 	if(!dest)
-		return ERR_NO_MEMORY;
+		return DROIDBOOT_ENOMEM;
 	strcpy(dest, temp);
 	*_dest = dest;
 
@@ -73,7 +73,7 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
     
 	buf = malloc(entry_file_size + 1);
 	if(!buf)
-		return ERR_NO_MEMORY;
+		return DROIDBOOT_ENOMEM;
 
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: Alloc entr buf ok\n");
     
@@ -95,7 +95,7 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
 		return ret;
 	}
 
-	ret = config_parse_option(&entry->linux, "linux", (const char *)buf);
+	ret = config_parse_option(&entry->kernel, "linux", (const char *)buf);
 	if(ret < 0) {
 		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'linux'\n", path);
 		free(buf);
@@ -167,7 +167,7 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
     ret=ext4_dir_open (&d, ENTRIES_DIR);
     if(ret!=0){
         droidboot_log(DROIDBOOT_LOG_ERROR, "config_parser: entries dir open failed: %d\n", ret);
-        mdelay(1000);
+        droidboot_delay(1000);
     }
     droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: entries dir open ok\n");
     de = ext4_dir_entry_next(&d);
@@ -240,8 +240,8 @@ int parse_global_config(struct global_config *global_config) {
 	char *timeout = NULL;
 	ret = config_parse_option(&timeout, "timeout", (const char *)buf);
 
-	global_config->timeout = atoi(timeout);
-    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", atoi(timeout));
+	global_config->timeout = droidboot_atoi(timeout);
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", droidboot_atoi(timeout));
     //ext4_umount("/boot/");
 	return 0;
 } 

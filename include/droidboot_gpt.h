@@ -144,7 +144,7 @@
      *((x)+6) = (((y) >> 48) & 0xff);   \
      *((x)+7) = (((y) >> 56) & 0xff);
      
-uint64_t abm_settings_offset;
-uint64_t abm_settings_blkcnt;
+extern uint64_t abm_settings_offset;
+extern uint64_t abm_settings_blkcnt;
 
 droidboot_error droidboot_parse_gpt_on_sd();

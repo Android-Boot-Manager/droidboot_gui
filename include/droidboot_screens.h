@@ -1,9 +1,10 @@
+#pragma once
 #include <lvgl.h>
 
-lv_obj_t *boot_logo;
-lv_obj_t *fastboot;
-lv_obj_t *setup_main;
-lv_obj_t *setup_about;
-lv_obj_t *dualboot_menu;
+extern lv_obj_t *boot_logo;
+extern lv_obj_t *fastboot;
+extern lv_obj_t *setup_main;
+extern lv_obj_t *setup_about;
+extern lv_obj_t *dualboot_menu;
 
-void screens_init();
+void screens_init(void);

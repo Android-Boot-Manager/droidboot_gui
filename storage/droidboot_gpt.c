@@ -2,6 +2,7 @@
 #include <droidboot_logging.h>
 #include <sys/types.h>
 #include <droidboot_gpt.h>
+#include <libc-hack.h>
 
 #define DROIDBOOT_ROUNDUP(a, b) (((a) + ((b)-1)) & ~((b)-1))
 #define DROIDBOOT_ROUNDDOWN(a, b) ((a) & ~((b)-1))
@@ -34,7 +35,9 @@ struct gpt_header {
 	uint32_t header_size;
 	uint32_t max_partition_count;
 };
-	
+
+uint64_t abm_settings_offset;	
+uint64_t abm_settings_blkcnt;
 bool parse_done = false;
 
 static status_t validate_mbr_partition(const struct mbr_part *part)
