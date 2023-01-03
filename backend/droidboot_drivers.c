@@ -52,10 +52,6 @@ static char *entry_to_str(uint8_t type)
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;
     sdfail=false;
-    // Run platform init
-    ret = droidboot_platform_init();
-    if (ret!=DROIDBOOT_EOK)
-        return ret;
     
     static lv_indev_drv_t indev_drv1;
     lv_indev_drv_init(&indev_drv1);      /*Basic initialization*/

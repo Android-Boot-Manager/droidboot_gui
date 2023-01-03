@@ -13,6 +13,10 @@ int droidboot_num_of_boot_entries;
 
 void droidboot_init()
 {
+    // Run platform init it should be in drivers init, but get_width/height functions can be used by lvgl_init, and on some platforms you cant use them before plarform init.
+    droidboot_error ret = droidboot_platform_init();
+    if (ret!=DROIDBOOT_EOK)
+        return ret;
     droidboot_lvgl_init();
     droidboot_driver_init();
 }

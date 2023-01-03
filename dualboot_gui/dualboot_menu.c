@@ -175,11 +175,11 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     droidboot_entry_list = droidboot_entry_list1;
     droidboot_global_config = droidboot_global_config1;
     droidboot_num_of_boot_entries = droidboot_num_of_boot_entries1;
-    
+    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu have: %d entries\n", droidboot_num_of_boot_entries);
    // lv_scr_load(dualboot_menu);
     //lv_obj_del(boot_logo);
     //lv_obj_del(setup_main);
-    
+
     lv_obj_t * win = lv_win_create(lv_scr_act(), lv_pct(6));
     lv_obj_set_pos(win, 0, 0);
     lv_obj_set_size(win, lv_pct(100), lv_pct(100));
@@ -194,8 +194,9 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
 
     no_autoboot = false;
     exit=100;
+    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu draw done, going into loop\n");
     while(exit==100){
-        droidboot_delay(200);
+        droidboot_platform_tasks();
     }
     lv_timer_del(timer);
     if(exit==1){
