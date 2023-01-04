@@ -51,8 +51,10 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     droidboot_log(DROIDBOOT_LOG_TRACE, "kernel get size done\n");
     if(droidboot_get_kernel_load_addr()==NULL)
         kernel_raw = malloc(kernel_raw_size);
-    else
+    else{
+		droidboot_log(DROIDBOOT_LOG_TRACE, "loading kernel at addr %d\n", droidboot_get_kernel_load_addr());
         kernel_raw = droidboot_get_kernel_load_addr();
+	}
 
 	if(ext4_fread(&fp, kernel_raw, kernel_raw_size, NULL) < 0) {
 	    droidboot_log(DROIDBOOT_LOG_ERROR, "kernel load failed\n");
@@ -79,8 +81,10 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
         {
            ramdisk_raw = kernel_raw+kernel_raw_size;
         }
-    } else
+    } else {
+		droidboot_log(DROIDBOOT_LOG_INFO, "loading ramdisk at addr %d\n", droidboot_get_ramdisk_load_addr());
         ramdisk_raw = droidboot_get_ramdisk_load_addr();
+	}
 
 	if(ext4_fread(&fp, ramdisk_raw, ramdisk_size, &rb) < 0) {
 	    droidboot_log(DROIDBOOT_LOG_ERROR, "ramdisk load failed\n");
@@ -89,7 +93,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	ext4_fclose(&fp);
 	droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)ramdisk_raw, 16);
     droidboot_log(DROIDBOOT_LOG_TRACE, "ramdisk load ok\n");
-    
+
     if(droidboot_get_dtb_load_addr()!=NULL){
         dtb_raw=droidboot_get_dtb_load_addr();
         droidboot_log(DROIDBOOT_LOG_ERROR, "going to load dtb\n");
@@ -98,10 +102,10 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	    dtb_size = ext4_ftell(&fp);
 	    ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
 	    if (!dtb_size) {
-	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed\n");
+	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed, path: %s\n", dtb);
 		    return -1;
 	    }
-	    droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed\n");
+
 	    if(ext4_fread(&fp, dtb_raw, dtb_size, &rb) < 0) {
 	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb load failed\n");
            return -1;
