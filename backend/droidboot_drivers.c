@@ -22,32 +22,7 @@ static int droidboot_lwext_sd_dev_bwrite(struct ext4_blockdev *bdev, const void 
 }
 
 EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
-		 droidboot_lwext_sd_dev_bread, droidboot_lwext_sd_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0); 
-
-static char *entry_to_str(uint8_t type)
-{
-	switch (type) {
-	case EXT4_DE_UNKNOWN:
-		return "[unk] ";
-	case EXT4_DE_REG_FILE:
-		return "[fil] ";
-	case EXT4_DE_DIR:
-		return "[dir] ";
-	case EXT4_DE_CHRDEV:
-		return "[cha] ";
-	case EXT4_DE_BLKDEV:
-		return "[blk] ";
-	case EXT4_DE_FIFO:
-		return "[fif] ";
-	case EXT4_DE_SOCK:
-		return "[soc] ";
-	case EXT4_DE_SYMLINK:
-		return "[sym] ";
-	default:
-		break;
-	}
-	return "[???]";
-}
+		 droidboot_lwext_sd_dev_bread, droidboot_lwext_sd_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0);
 
 droidboot_ret droidboot_driver_init(){
     droidboot_ret ret = DROIDBOOT_EOK;

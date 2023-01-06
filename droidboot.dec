@@ -1,0 +1,38 @@
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = droidboot
+  PACKAGE_VERSION                = 0.4
+
+[Includes]
+  include
+  lib/ext4/include
+  lib/lvgl/
+  droidboot_platforms/common
+  droidboot_platforms/libc-hack
+  droidboot_platforms/libc-hack/uefi
+  droidboot_platforms/uefi/common
+  droidboot_platforms/uefi/common_linuxloader
+  droidboot_platforms/libc-hack/uefi/include
+  droidboot_platforms/libc-hack/uefi/include/arch/generic
+
+[Includes.Ia32]
+  droidboot_platforms/libc-hack/uefi/include/arch/i386
+
+[Includes.X64]
+  droidboot_platforms/libc-hack/uefi/include/arch/x86_64
+
+[Includes.ARM]
+  droidboot_platforms/libc-hack/uefi/include/arch/arm
+
+[Includes.AARCH64]
+  droidboot_platforms/libc-hack/uefi/include/arch/aarch64
+
+[Guids.common]
+    gdroidbootTokenSpaceGuid    = { 0xabb5da8d, 0x994a, 0x425a, { 0x89, 0x05, 0xde, 0xcb, 0x4d, 0xcc, 0x73, 0x2f } }
+   gdroidbootFileGuid          = { 0x6d77b2bb, 0x69eb, 0x42ab, { 0xbe, 0xcf, 0x4f, 0x40, 0xc8, 0x95, 0x68, 0xc3 } }
+
+[PcdsFixedAtBuild.common]
+  gdroidbootTokenSpaceGuid.PcdDeviceTreeStore          | 0                              | UINT64  | 0x0001b101
+
+[Protocols.common]
+  gKernelFdtProtocolGuid       = { 0x8557a993, 0xea5d, 0x40fd, { 0x91, 0xb1, 0xf9, 0xba, 0x45, 0x67, 0xba, 0x8d } }
