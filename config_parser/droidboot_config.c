@@ -2,7 +2,7 @@
 // © 2019 Mis012
 // © 2020-2022 luka177
 // © 2022 Hallo Welt Systeme UG
-// © 2022 luka177
+// © 2022-2023 luka177
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -237,11 +237,11 @@ int parse_global_config(struct global_config *global_config) {
 		return 0;
 	}
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: default config parse done\n");
-	char *timeout = NULL;
-	ret = config_parse_option(&timeout, "timeout", (const char *)buf);
+	//char timeout;
+	//ret = config_parse_option(&timeout, "timeout", (const char *)buf);
 
-	global_config->timeout = droidboot_atoi(timeout);
-    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", droidboot_atoi(timeout));
+	global_config->timeout = 20;
+    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", 20);
     //ext4_umount("/boot/");
 	return 0;
 } 

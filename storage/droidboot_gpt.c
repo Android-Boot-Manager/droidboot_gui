@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <droidboot_error.h>
 #include <droidboot_logging.h>
 #include <sys/types.h>
@@ -36,11 +40,11 @@ struct gpt_header {
 	uint32_t max_partition_count;
 };
 
-uint64_t abm_settings_offset;	
+uint64_t abm_settings_offset;
 uint64_t abm_settings_blkcnt;
 bool parse_done = false;
 
-static status_t validate_mbr_partition(const struct mbr_part *part)
+static droidboot_error validate_mbr_partition(const struct mbr_part *part)
 {
 	/* check for invalid types */
 	if (part->type == 0)
@@ -86,17 +90,32 @@ partition_parse_gpt_header(unsigned char *buffer, struct gpt_header* header)
 droidboot_error droidboot_parse_gpt_on_sd()
 {
     droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
-
+	abm_settings_blkcnt=0;
     if(parse_done){
        return DROIDBOOT_EOK;
     }
+
     if(!droidboot_sd_exists()){
         droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot_parse_gpt_on_sd: sd card is not present\n");
         return DROIDBOOT_ENOENT;
     }
 
+	if(droidboot_sd_blklen()==0){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot_parse_gpt_on_sd: sd card blklen is 0\n");
+        return DROIDBOOT_ENOENT;
+    }
+
+    if(droidboot_sd_blkcnt()==0){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot_parse_gpt_on_sd: sd card blkcnt is 0\n");
+        return DROIDBOOT_ENOENT;
+    }
+
+    droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
+
+
     // get a dma aligned and padded block to read info
 	char *buf = malloc(droidboot_sd_blklen()*2);
+	droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
 	/* sniff for MBR partition types */
 		unsigned int i, j, n;
 		int gpt_partitions_exist = 0;
@@ -110,7 +129,6 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		/* see if a partition table makes sense here */
 		struct mbr_part part[4];
 		memcpy(part, buf + 446, sizeof(part));
-        droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
 		droidboot_log(DROIDBOOT_LOG_INFO, "mbr partition table dump:\n");
 		for (i=0; i < 4; i++) {
 			droidboot_log(DROIDBOOT_LOG_INFO, "\t%i: status 0x%hhx, type 0x%hhx, start 0x%x, len 0x%x\n", i, part[i].status, part[i].type, part[i].lba_start, part[i].lba_length);
@@ -128,7 +146,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 			}
 		}
 
-		if(!gpt_partitions_exist) return;
+		if(!gpt_partitions_exist) return DROIDBOOT_ENOENT;
 		droidboot_log(DROIDBOOT_LOG_INFO, "found GPT\n");
 
 		dridboot_sd_read_block(buf, 1, 1);
@@ -145,7 +163,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 			err = partition_parse_gpt_header(buf, &gpthdr);
 			if (err) {
 				droidboot_log(DROIDBOOT_LOG_ERROR, "GPT: Primary and backup signatures invalid\n");
-				return;
+				return DROIDBOOT_EILSEQ;
 			}
 		}
 
@@ -195,10 +213,14 @@ droidboot_error droidboot_parse_gpt_on_sd()
                    abm_settings_offset=first_lba;
                    abm_settings_blkcnt=size;
                 }
-                
-				droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
+
+				//droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
 				// TODO: So something with this part
 			}
-		}  
+		}
+	if(abm_settings_blkcnt==0)
+	{
+		return DROIDBOOT_ENOENT;
+	}
     return DROIDBOOT_EOK;
 }

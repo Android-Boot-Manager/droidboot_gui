@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include <stdlib.h>
 #include <droidboot_main.h>
 #include <droidboot_error.h>
 #include <droidboot_init.h>
@@ -16,7 +17,7 @@ void droidboot_init()
     // Run platform init it should be in drivers init, but get_width/height functions can be used by lvgl_init, and on some platforms you cant use them before plarform init.
     droidboot_error ret = droidboot_platform_init();
     if (ret!=DROIDBOOT_EOK)
-        return ret;
+        return;
     droidboot_lvgl_init();
     droidboot_driver_init();
 }
@@ -29,16 +30,20 @@ void droidboot_show_dualboot_menu()
    */
     
     // If there is no SD card or we cant mount abm_settings for unknown reason just boot from storage
-    if(droidboot_get_sd_fail())
+    if(droidboot_get_sd_fail()){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
         return;
+    }
 
     //Parse config
-    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: going to parse configs");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: going to parse configs\n");
     droidboot_error ret = parse_boot_entries(&droidboot_entry_list);
-    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: parse configs done");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: parse configs done\n");
     // Parse global config
     droidboot_global_config = malloc(sizeof(struct global_config));
+    droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
     parse_global_config(droidboot_global_config);
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: parse global config done\n");
 
     // Get number of entries from storage
     droidboot_num_of_boot_entries = get_dualboot_entry_count();

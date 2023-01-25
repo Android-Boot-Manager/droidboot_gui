@@ -14,9 +14,25 @@
 
 [LibraryClasses]
   FdtLib
+  droidbootLibcHack
+  droidbootPlatformsLib
+  LvglLib
+  Ext4Lib
 
 [Guids]
   gdroidbootFileGuid
 
 [Sources]
   backend/droidboot_drivers.c
+  backend/droidboot_dualboot_backend.c
+  common/droidboot_helpers.c
+  common/droidboot_init.c
+  common/droidboot_logging.c
+  common/droidboot_main.c
+  common/droidboot_screens.c
+  common/droidboot_stdfunc.c
+  config_parser/droidboot_config.c
+  config_parser/droidboot_fs_util.c
+  dualboot_gui/droidboot_boot_logo.c
+  dualboot_gui/dualboot_menu.c
+  storage/droidboot_gpt.c

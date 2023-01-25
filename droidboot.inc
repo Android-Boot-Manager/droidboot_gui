@@ -4,6 +4,9 @@
   KernelFdtDxe|droidboot_platforms/uefi/common_linuxloader/kernelfdt/KernelFdtDxe.inf
   droidbootRenegadeLib|droidboot_platforms/uefi/common_linuxloader/lib/droidbootRenegadeLib.inf
   droidbootLibcHack|droidboot_platforms/libc-hack/uefi/droidbootLibcHack.inf
+  Ext4Lib|lib/ext4/Ext4Lib.inf
+  LvglLib|lib/lvgl/LvglLib.inf
+  UefiWrapper|droidboot_platforms/uefi/common/uefi-wrapper/UefiWrapper.inf
 
 [Components]
   droidbootLib.inf
@@ -11,3 +14,6 @@
   droidboot_platforms/uefi/common_linuxloader/kernelfdt/KernelFdtDxe.inf
   droidboot_platforms/uefi/common_linuxloader/lib/droidbootRenegadeLib.inf
   droidboot_platforms/libc-hack/uefi/droidbootLibcHack.inf
+  lib/ext4/Ext4Lib.inf
+  lib/lvgl/LvglLib.inf
+  droidboot_platforms/uefi/common/uefi-wrapper/UefiWrapper.inf

@@ -10,13 +10,13 @@ void droidboot_log(droidboot_log_level log_level, const char *fmt, ...){
         char printbuffer[512];
         #ifdef DROIDBOOT_ON_SCREEN_LOG
 	        va_start(args, fmt);
-	        vsprintf(printbuffer, fmt, args);
+	        vsnprintf(printbuffer, 512, fmt, args);
 	        va_end(args);
             droidboot_platform_on_screen_log(printbuffer);
         #endif
         #ifdef DROIDBOOT_SYSTEM_LOG
 	        va_start(args, fmt);
-	        vsprintf(printbuffer, fmt, args);
+	        vsnprintf(printbuffer, 512, fmt, args);
 	        va_end(args);
             droidboot_platform_system_log(printbuffer);
         #endif

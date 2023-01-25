@@ -1,5 +1,9 @@
 // This file contains a high level, universal (not platform dependent) code for displaying ABM gui menu
 // At this stage we except that display is inited and lower level code is already executed.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <lvgl.h>
 
 #include <droidboot_drivers.h>
@@ -11,7 +15,7 @@
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
 
-int exit;
+int droidboot_exit;
 int timeout;
 lv_obj_t *timeout_label;
 bool no_autoboot;
@@ -43,15 +47,15 @@ static void event_handler(lv_event_t * e)
         if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
             droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: Linux is null");   
-            exit=0;
+            droidboot_exit=0;
             return;
         }
 
         selected_entry=droidboot_entry_list + index;
         no_autoboot=true;
            
-        exit=1;
-        droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: exit is: %d\n", exit);
+        droidboot_exit=1;
+        droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: exit is: %d\n", droidboot_exit);
     }
 }
 
@@ -69,7 +73,7 @@ void timeout_handler(lv_timer_t * timer)
         lv_label_set_text_fmt(timeout_label, "\n\nBooting in %d seconds.", timeout);
     } else if (timeout>0 && no_autoboot) {
         lv_obj_add_flag(timeout_label, LV_OBJ_FLAG_HIDDEN);
-    } if (exit==100 && timeout<=0 && !no_autoboot) {
+    } if (droidboot_exit==100 && timeout<=0 && !no_autoboot) {
         //lvgl_show_boot_logo();
         // Lets firstly read index from metadata
         int ret;
@@ -98,17 +102,17 @@ void timeout_handler(lv_timer_t * timer)
         if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
             droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: linux is null");   
-            exit=0;
+            droidboot_exit=0;
             return;
         }
 
     selected_entry=droidboot_entry_list + index;
-    exit=1;
+    droidboot_exit=1;
     
   }
 }
 
-void droidboot_add_dualboot_menu_buttons(list1){
+void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
     lv_obj_t * list_btn;
        
     //lv_img_dsc_t img_dscs[droidboot_num_of_boot_entries];
@@ -185,7 +189,7 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     lv_obj_set_size(win, lv_pct(100), lv_pct(100));
     lv_obj_t * win_title = lv_win_add_title(win, "Select OS"); 
     lv_obj_set_pos(win_title, 0, 0);
-    
+
     lv_obj_t * list1 = lv_list_create(win); 
     lv_obj_set_size(list1, lv_pct(100), lv_pct(100));
     lv_obj_set_pos(list1, 0, 00);
@@ -193,13 +197,13 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     droidboot_add_dualboot_menu_buttons(list1);
 
     no_autoboot = false;
-    exit=100;
+    droidboot_exit=100;
     droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu draw done, going into loop\n");
-    while(exit==100){
+    while(droidboot_exit==100){
         droidboot_platform_tasks();
     }
     lv_timer_del(timer);
-    if(exit==1){
+    if(droidboot_exit==1){
         droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit, boot second OS\n");
         droidboot_boot_linux_from_ext4(selected_entry);
     }

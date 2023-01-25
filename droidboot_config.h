@@ -9,4 +9,4 @@
 //#define DROIDBOOT_NO_LOGGING 0
 
 // DROIDBOOT_LOG_LEVEL can be 0-5 where 0 - trace, 1 - info, 2 - warning, 3 - error, 4 - fail, 5 - nothing
-#define DROIDBOOT_LOG_LEVEL 0
+#define DROIDBOOT_LOG_LEVEL 4
