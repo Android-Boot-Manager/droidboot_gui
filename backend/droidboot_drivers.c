@@ -21,7 +21,7 @@ static int droidboot_lwext_sd_dev_bwrite(struct ext4_blockdev *bdev, const void 
     return DROIDBOOT_EOK;
 }
 
-EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 4096, 0, droidboot_platform_settings_dev_open,
+EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 0, 0, droidboot_platform_settings_dev_open,
 		 droidboot_lwext_sd_dev_bread, droidboot_lwext_sd_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0);
 
 droidboot_ret droidboot_driver_init(){
@@ -43,6 +43,7 @@ droidboot_ret droidboot_driver_init(){
 	droidboot_lvgl_threads_init();
 	if(droidboot_parse_gpt_on_sd()==DROIDBOOT_EOK){
 	    droidboot_abm_settings_dev.part_offset = abm_settings_offset * droidboot_sd_blklen();
+        droidboot_abm_settings_dev.bdif->ph_bsize = droidboot_sd_blklen();
         droidboot_abm_settings_dev.bdif->ph_bcnt = abm_settings_blkcnt;
         droidboot_abm_settings_dev.part_size = abm_settings_blkcnt*droidboot_sd_blklen();
         ext4_device_register(&droidboot_abm_settings_dev, "abm_settings");
