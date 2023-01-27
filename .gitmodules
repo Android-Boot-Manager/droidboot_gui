@@ -7,3 +7,6 @@
 [submodule "droidboot_platforms"]
 	path = droidboot_platforms
 	url = https://github.com/Android-Boot-Manager/droidboot_platforms
+[submodule "lib/libufdt"]
+	path = lib/libufdt
+	url = https://github.com/Android-Boot-Manager/libufdt

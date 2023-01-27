@@ -6,7 +6,9 @@
 [Includes]
   include
   lib/ext4/include
-  lib/lvgl/
+  lib/lvgl
+  lib/libufdt/include
+  lib/libufdt/sysdeps/include
   droidboot_platforms/common
   droidboot_platforms/libc-hack
   droidboot_platforms/libc-hack/uefi
@@ -28,11 +30,25 @@
   droidboot_platforms/libc-hack/uefi/include/arch/aarch64
 
 [Guids.common]
-    gdroidbootTokenSpaceGuid    = { 0xabb5da8d, 0x994a, 0x425a, { 0x89, 0x05, 0xde, 0xcb, 0x4d, 0xcc, 0x73, 0x2f } }
+   gdroidbootTokenSpaceGuid    = { 0xabb5da8d, 0x994a, 0x425a, { 0x89, 0x05, 0xde, 0xcb, 0x4d, 0xcc, 0x73, 0x2f } }
    gdroidbootFileGuid          = { 0x6b00affc, 0x6398, 0x46c4, {0xaf, 0xb5, 0x66, 0x25, 0xe3, 0x4c, 0x6f, 0x82}}
+   gLinuxEfiRandomSeedTableGuid = { 0x1ce1e5bc, 0x7ceb, 0x42f2, { 0x81, 0xe5, 0x8a, 0xad, 0xf1, 0x80, 0xf5, 0x7b } }
 
 [PcdsFixedAtBuild.common]
   gdroidbootTokenSpaceGuid.PcdDeviceTreeStore          | 0                              | UINT64  | 0x0001b101
+  gdroidbootTokenSpaceGuid.PcdBootCustomLoadAddress    | FALSE                          | BOOLEAN | 0x0001b501
+  gdroidbootTokenSpaceGuid.PcdBootLoadAddressStart     | 0x0                            | UINT64  | 0x0001b502
+  gdroidbootTokenSpaceGuid.PcdBootLoadAddressEnd       | 0x0                            | UINT64  | 0x0001b503
+  gdroidbootTokenSpaceGuid.PcdBootKernelAddressStart   | 0x0                            | UINT64  | 0x0001b504
+  gdroidbootTokenSpaceGuid.PcdBootKernelAddressEnd     | 0x0                            | UINT64  | 0x0001b505
+  gdroidbootTokenSpaceGuid.PcdBootRamdiskAddressStart  | 0x0                            | UINT64  | 0x0001b506
+  gdroidbootTokenSpaceGuid.PcdBootRamdiskAddressEnd    | 0x0                            | UINT64  | 0x0001b507
+  gdroidbootTokenSpaceGuid.PcdBootFdtAddressStart      | 0x0                            | UINT64  | 0x0001b508
+  gdroidbootTokenSpaceGuid.PcdBootFdtAddressEnd        | 0x0                            | UINT64  | 0x0001b509
 
 [Protocols.common]
   gKernelFdtProtocolGuid       = { 0x8557a993, 0xea5d, 0x40fd, { 0x91, 0xb1, 0xf9, 0xba, 0x45, 0x67, 0xba, 0x8d } }
+  gEfiChipInfoProtocolGuid     = { 0xb0760469, 0x970c, 0x487a, { 0xa4, 0xb5, 0x28, 0xdb, 0x7b, 0x45, 0xce, 0xf1 } }
+  gEfiPlatformInfoProtocolGuid = { 0x157a5c45, 0x21b2, 0x43c5, { 0xba, 0x7c, 0x82, 0x2f, 0xee, 0x5f, 0xe5, 0x99 } }
+  gEfiRamPartitionProtocolGuid = { 0x5172ffb5, 0x4253, 0x7d51, { 0xc6, 0x41, 0xa7, 0x01, 0xf9, 0x73, 0x10, 0x3c } }
+  gEfiDDRGetInfoProtocolGuid   = { 0x1a7c0eb8, 0x5646, 0x45f7, { 0xab, 0x20, 0xea, 0xe5, 0xda, 0x46, 0x40, 0xa2 } }
