@@ -36,3 +36,4 @@
   dualboot_gui/droidboot_boot_logo.c
   dualboot_gui/dualboot_menu.c
   storage/droidboot_gpt.c
+  extras/droidboot_dtb.c

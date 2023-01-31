@@ -1,9 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <lvgl.h>
 #include <ext4.h>
 
 #include <droidboot_drivers.h>
 #include <droidboot_screens.h>
 #include <droidboot_config_parser.h>
+#include <droidboot_dtb.h>
 
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
@@ -42,7 +47,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     ext4_fseek(&fp, 0, SEEK_END);
 	kernel_raw_size = ext4_ftell(&fp);
 	droidboot_log(DROIDBOOT_LOG_INFO, "%s size %d\n", kernel, kernel_raw_size);
-	ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
+	ext4_fseek(&fp, 0, SEEK_SET); /* same as rewind(f); */
 	if(!kernel_raw_size) {
 		droidboot_log(DROIDBOOT_LOG_ERROR, "kernnel get size failed, path: %s\n, ramdisk path:%s",kernel, initrd);
 		return;
@@ -69,7 +74,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     ext4_fopen (&fp, initrd, "r");
     ext4_fseek(&fp, 0, SEEK_END);
 	ramdisk_size = ext4_ftell(&fp);
-	ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
+	ext4_fseek(&fp, 0, SEEK_SET); /* same as rewind(f); */
 	if (!ramdisk_size) {
 	    droidboot_log(DROIDBOOT_LOG_ERROR, "ramdisk get size failed\n");
 		return;
@@ -100,24 +105,26 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
         ext4_fopen (&fp, dtb, "r");
         ext4_fseek(&fp, 0, SEEK_END);
 	    dtb_size = ext4_ftell(&fp);
-	    ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
+	    ext4_fseek(&fp, 0, SEEK_SET); /* same as rewind(f); */
 	    if (!dtb_size) {
 	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb get size failed, path: %s\n", dtb);
 		    return;
 	    }
-
+		if(droidboot_get_dtb_load_addr()==1){
+			dtb_raw=malloc(dtb_size);
+		}
 	    if(ext4_fread(&fp, dtb_raw, dtb_size, &rb) < 0) {
 	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb load failed\n");
            return;
 	    }
 	    droidboot_log(DROIDBOOT_LOG_TRACE, "dtb load done\n");
     } else {
-        dtb_size=NULL;
-        dtb_raw=NULL;
+        dtb_size=0;
     }
 
     // time to umount fs
     ext4_cache_write_back("/boot/", 0);
     ext4_umount("/boot/");
+	droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot linux\n");
 	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, dtb_raw, dtb_size, options);
 }

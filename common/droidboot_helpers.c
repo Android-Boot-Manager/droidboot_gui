@@ -16,8 +16,8 @@ struct lv_img_dsc_t* droidboot_load_lvgl_image_from_ext4(char* path){
 
     off_t header_len      = sizeof(lv_img_header_t);          // file header struct
     off_t buf_len         = entry_file_size - header_len;     // file size minus header size
-    lv_img_dsc_t* img_dsc = malloc(sizeof(lv_img_dsc_t));     // image descriptor struct
-    unsigned char *buf    = malloc(buf_len);                  // pixel data only
+    lv_img_dsc_t* img_dsc = (lv_img_dsc_t*)malloc(sizeof(lv_img_dsc_t));     // image descriptor struct
+    unsigned char *buf    = (unsigned char *)malloc(buf_len);                  // pixel data only
 
     ext4_fread(&fp, img_dsc, header_len, NULL);
     ext4_fread(&fp, buf, buf_len, NULL);
