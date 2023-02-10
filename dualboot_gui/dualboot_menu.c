@@ -153,7 +153,7 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
         return;
     
     buf = malloc(128);
-    
+
 	ret=ext4_fread(&fp, buf, 128, 0);
 	if(ret!=0)
         return;

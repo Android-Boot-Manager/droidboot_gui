@@ -21,7 +21,7 @@ static int droidboot_lwext_sd_dev_bwrite(struct ext4_blockdev *bdev, const void 
     return DROIDBOOT_EOK;
 }
 
-EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 0, 0, droidboot_platform_settings_dev_open,
+EXT4_BLOCKDEV_STATIC_INSTANCE(droidboot_abm_settings_dev, 512, 0, droidboot_platform_settings_dev_open,
 		 droidboot_lwext_sd_dev_bread, droidboot_lwext_sd_dev_bwrite, droidboot_platform_settings_dev_close, 0, 0);
 
 droidboot_ret droidboot_driver_init(){
