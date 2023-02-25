@@ -8,5 +8,10 @@ include $(DROIDBOOT_GUI_LOCAL_PATH)/lib/lib.mk
 include $(DROIDBOOT_GUI_LOCAL_PATH)/droidboot_platforms/lk.mk
 include $(DROIDBOOT_GUI_LOCAL_PATH)/storage/storage.mk
 
+ifdef OBJS
 INCLUDES += "-I$(DROIDBOOT_GUI_LOCAL_PATH)"
-INCLUDES += "-I$(DROIDBOOT_GUI_LOCAL_PATH)/include" 
+INCLUDES += "-I$(DROIDBOOT_GUI_LOCAL_PATH)/include"
+else
+GLOBAL_INCLUDES += $(DROIDBOOT_GUI_LOCAL_PATH)
+GLOBAL_INCLUDES += $(DROIDBOOT_GUI_LOCAL_PATH)/include
+endif

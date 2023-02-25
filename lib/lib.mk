@@ -4,4 +4,8 @@ LVGL_DIR_NAME := lvgl
 
 include $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/ext4/lwext4.mk
 include $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/lvgl/lvgl.mk
-CFLAGS += "-I$(DROIDBOOT_GUI_LIB_LOCAL_PATH)/lvgl/src"
+ifdef OBJS
+INCLUDES += $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/lvgl/src
+else
+GLOBAL_INCLUDES += $(DROIDBOOT_GUI_LIB_LOCAL_PATH)/lvgl/src
+endif

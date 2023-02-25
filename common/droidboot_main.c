@@ -6,6 +6,7 @@
 #include <droidboot_config_parser.h>
 #include <droidboot_logging.h>
 #include <droidboot_drivers.h>
+#include <dualboot_menu.h>
 #include <droidboot_platforms/common/droidboot_platform_common.h>
 
 struct boot_entry *droidboot_entry_list;
