@@ -11,6 +11,7 @@
 #include <droidboot_config_parser.h>
 #include <droidboot_dualboot_backend.h>
 #include <droidboot_stdfunc.h>
+#include <droidboot_helpers.h>
 
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
@@ -131,7 +132,7 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
             strcpy(logo_path, "/boot/");
             strcat(logo_path, (droidboot_entry_list + i)->logo);
 
-            list_btn = lv_list_add_btn(list1,  droidboot_load_lvgl_image_from_ext4(logo_path), title);
+            list_btn = lv_list_add_btn(list1, droidboot_load_lvgl_image_from_ext4(logo_path), title);
         } else {
             list_btn = lv_list_add_btn(list1, NULL, title);
         }
