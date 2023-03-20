@@ -131,11 +131,10 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
             char logo_path[strlen((droidboot_entry_list + i)->logo)+strlen("/boot/"+3)];
             strcpy(logo_path, "/boot/");
             strcat(logo_path, (droidboot_entry_list + i)->logo);
-
             list_btn = lv_list_add_btn(list1, droidboot_load_lvgl_image_from_ext4(logo_path), title);
         } else {
             list_btn = lv_list_add_btn(list1, NULL, title);
-        }
+       }
 
         lv_obj_add_event_cb(list_btn, event_handler, LV_EVENT_CLICKED, NULL);
         lv_obj_add_event_cb(list_btn, disable_autoboot_func, LV_EVENT_DEFOCUSED, NULL);
@@ -203,10 +202,11 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     while(droidboot_exit==100){
         droidboot_platform_tasks();
     }
-    lv_timer_del(timer);
+    //lv_timer_del(timer);
+    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit\n");
     if(droidboot_exit==1){
         droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit, boot second OS\n");
         droidboot_boot_linux_from_ext4(selected_entry);
     }
-    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit\n");
+    droidboot_log(DROIDBOOT_LOG_INFO, "Dualboot menu: exit to bl\n");
 }
