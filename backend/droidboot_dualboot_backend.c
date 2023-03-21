@@ -127,5 +127,5 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     ext4_cache_write_back("/boot/", 0);
     ext4_umount("/boot/");
 	droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot linux\n");
-	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, droidboot_dtb_post_processing(dtb_raw, dtb_size), dtb_size, options);
+	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, dtb_raw, dtb_size, options);
 }

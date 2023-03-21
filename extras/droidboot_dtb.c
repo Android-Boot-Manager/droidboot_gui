@@ -11,17 +11,14 @@
 
 droidboot_error fdt_add_ramdisk_addr(void *ramdisk_raw, off_t ramdisk_size, void *dtb_raw)
 {
-     int r,off;
+    int r,off;
     droidboot_log(DROIDBOOT_LOG_TRACE, "going to add initrd to dtb at addr: %llx, initrd: %llx\n", (uint64_t)dtb_raw, (uint64_t)ramdisk_raw);
     r=fdt_check_header(dtb_raw);
-	if(r!=0){
+    if(r!=0){
         droidboot_log(DROIDBOOT_LOG_ERROR, "dtb header check failed: %d\n", r);
         return r;
     }
-    fdt_set_totalsize(dtb_raw, 1048576);
-    char buf[64],*model;
-    model=(char*)fdt_getprop(dtb_raw,0,"model",NULL);
-    droidboot_log(DROIDBOOT_LOG_INFO, "model: %s\n", model);
+
     uint64_t start,end;
 
     r=fdt_path_offset(dtb_raw,"/chosen");
@@ -56,7 +53,7 @@ droidboot_error fdt_add_ramdisk_addr(void *ramdisk_raw, off_t ramdisk_size, void
     "update fdt initramfs address done (0x%llx - 0x%llx)\n",
     (unsigned long long)start,
     (unsigned long long)end
-	);
+    );
     return DROIDBOOT_EOK;
 }
 
