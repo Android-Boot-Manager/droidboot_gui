@@ -168,7 +168,7 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
 	lv_label_set_text_fmt(timeout_label, "\n\nBooting in %d seconds.", droidboot_global_config->timeout);
 	timeout = droidboot_global_config->timeout;
 	droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: timeout is: %d\n", timeout);
-	timer = lv_timer_create(timeout_handler, 100,  0);
+	timer = lv_timer_create(timeout_handler, 1000,  0);
 	lv_obj_set_y(timeout_label, lv_pct(3));
 	lv_obj_set_align(timeout_label, LV_ALIGN_RIGHT_MID);
 }
