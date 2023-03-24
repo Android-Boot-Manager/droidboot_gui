@@ -6,6 +6,7 @@
 #include <droidboot_logging.h>
 #include <sys/types.h>
 #include <droidboot_gpt.h>
+#include <droidboot_platform_common.h>
 #include <libc-hack.h>
 
 #define DROIDBOOT_ROUNDUP(a, b) (((a) + ((b)-1)) & ~((b)-1))

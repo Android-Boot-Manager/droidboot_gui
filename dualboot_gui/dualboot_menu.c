@@ -12,6 +12,7 @@
 #include <droidboot_dualboot_backend.h>
 #include <droidboot_stdfunc.h>
 #include <droidboot_helpers.h>
+#include <droidboot_theme.h>
 
 // droidboot_platforms_common.h is part of droidboot_platform and contains all functions used by droidboot gui
 #include <droidboot_platforms/common/droidboot_platform_common.h>
@@ -115,14 +116,14 @@ void timeout_handler(lv_timer_t * timer)
 
 void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
     lv_obj_t * list_btn;
-       
+
     //lv_img_dsc_t img_dscs[droidboot_num_of_boot_entries];
     int i;
-    
-    
+
+
     for (int i = 0; i < droidboot_num_of_boot_entries; i++) {
         char *title = malloc(strlen((droidboot_entry_list + i)->title) + 8);
-        
+
         strcpy(title, "\n");
         strcat(title, (droidboot_entry_list + i)->title);
         strcat(title, "\n");
@@ -136,6 +137,10 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
             list_btn = lv_list_add_btn(list1, NULL, title);
        }
 
+        // Style
+        lv_obj_add_style(list_btn, &droidboot_list_button_style, 0);
+        lv_obj_add_style(list_btn, &droidboot_list_button_selected_style, LV_STATE_FOCUS_KEY);
+
         lv_obj_add_event_cb(list_btn, event_handler, LV_EVENT_CLICKED, NULL);
         lv_obj_add_event_cb(list_btn, disable_autoboot_func, LV_EVENT_DEFOCUSED, NULL);
     }
@@ -147,11 +152,11 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
     ret=ext4_fopen (&fp, "/boot/db/last_index", "r");
     if(ret!=0)
         return;
-        
+
     ret=ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
     if(ret!=0)
         return;
-    
+
     buf = malloc(128);
 
 	ret=ext4_fread(&fp, buf, 128, 0);
@@ -159,7 +164,7 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
         return;
 
 	ret=ext4_fclose(&fp);
-	
+
 	droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: last entry is: %s\n", buf);
 	int index = droidboot_atoi(buf);
 	list_btn=lv_obj_get_child(list1, index);
@@ -189,11 +194,14 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     lv_obj_set_size(win, lv_pct(100), lv_pct(100));
     lv_obj_t * win_title = lv_win_add_title(win, "Select OS"); 
     lv_obj_set_pos(win_title, 0, 0);
+    lv_obj_add_style(lv_win_get_header(win), &droidboot_win_style, 0);
+    lv_obj_add_style(win, &droidboot_win_style, 0);
 
     lv_obj_t * list1 = lv_list_create(win); 
     lv_obj_set_size(list1, lv_pct(100), lv_pct(100));
     lv_obj_set_pos(list1, 0, 00);
     lv_obj_align(list1, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_add_style(list1, &droidboot_list_style, 0);
     droidboot_add_dualboot_menu_buttons(list1);
 
     no_autoboot = false;

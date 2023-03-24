@@ -30,4 +30,5 @@ int32_t fdt_get_address_cells(fdt*fdt);
 int32_t fdt_get_size_cells(fdt*fdt);
 bool fdt_get_reg(fdt*fdt,int off,int index,uint64_t*base,uint64_t*size);
 bool fdt_get_memory(fdt*fdt,int index,uint64_t*base,uint64_t*size);
+int fdt_add_memory(void *dtb_raw,UINTN addr,UINTN size);
 
