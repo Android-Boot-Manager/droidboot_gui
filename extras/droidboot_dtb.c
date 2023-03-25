@@ -57,13 +57,13 @@ droidboot_error fdt_add_ramdisk_addr(void *ramdisk_raw, off_t ramdisk_size, void
     return DROIDBOOT_EOK;
 }
 
-static int fdt_append_reg(void*fdt,int off,bool use32,UINTN val){
+static int fdt_append_reg(void*fdt,int off,bool use32,uint64_t val){
 	return use32?
 		fdt_appendprop_u32(fdt,off,"reg",(uint32_t)val):
 		fdt_appendprop_u64(fdt,off,"reg",(uint64_t)val);
 }
 
-int fdt_add_memory(void *dtb_raw,UINTN addr,UINTN size){
+int fdt_add_memory(void *dtb_raw,uint64_t addr,uint64_t size){
 	int ret=0;
 	char buf[64];
 	static int off=-1;
@@ -109,9 +109,9 @@ int fdt_add_memory(void *dtb_raw,UINTN addr,UINTN size){
 	return ret;
 }
 
-int fdt_add_merge_memory(void *dtb_raw,UINTN addr,UINTN size){
-	STATIC UINTN last_end=0,start=0;
-	UINTN end=addr+size;
+int fdt_add_merge_memory(void *dtb_raw,uint64_t addr,uint64_t size){
+	STATIC uint64_t last_end=0,start=0;
+	uint64_t end=addr+size;
 	if(size!=0){
 		if(last_end!=addr){
 			if(start>0&&end>start)fdt_add_memory(dtb_raw,start,end-start);
