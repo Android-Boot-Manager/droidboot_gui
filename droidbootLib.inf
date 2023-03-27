@@ -39,3 +39,4 @@
   dualboot_gui/dualboot_menu.c
   storage/droidboot_gpt.c
   extras/droidboot_dtb.c
+  extras/droidboot_kernel_helper.c
