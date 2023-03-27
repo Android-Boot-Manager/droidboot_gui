@@ -10,3 +10,6 @@
 [submodule "lib/libufdt"]
 	path = lib/libufdt
 	url = https://github.com/Android-Boot-Manager/libufdt
+[submodule "lib/minigz"]
+	path = lib/minigz
+	url = https://github.com/Android-Boot-Manager/droidboot_minigz

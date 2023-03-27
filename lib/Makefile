@@ -3,3 +3,4 @@
 
 obj-y += lvgl/
 obj-y += ext4/
+obj-y += minigz/

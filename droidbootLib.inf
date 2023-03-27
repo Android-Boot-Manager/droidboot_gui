@@ -18,6 +18,7 @@
   droidbootPlatformsLib
   LvglLib
   Ext4Lib
+  MinigzLib
 
 [Guids]
   gdroidbootFileGuid

@@ -9,6 +9,7 @@
   lib/lvgl
   lib/libufdt/include
   lib/libufdt/sysdeps/include
+  lib/minigz
   droidboot_platforms/common
   droidboot_platforms/libc-hack
   droidboot_platforms/libc-hack/uefi

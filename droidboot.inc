@@ -7,6 +7,7 @@
   Ext4Lib|lib/ext4/Ext4Lib.inf
   LvglLib|lib/lvgl/LvglLib.inf
   UfdtLib|lib/libufdt/UfdtLib.inf
+  MinigzLib|lib/minigz/MinigzLib.inf
   UefiWrapper|droidboot_platforms/uefi/common/uefi-wrapper/UefiWrapper.inf
   DroidbootInitBootLinux|droidboot_platforms/uefi/common_linuxloader/linux-boot/DroidbootInitBootLinux.inf
 
@@ -20,4 +21,5 @@
   lib/ext4/Ext4Lib.inf
   lib/lvgl/LvglLib.inf
   lib/libufdt/UfdtLib.inf
+  lib/minigz/MinigzLib.inf
   droidboot_platforms/uefi/common/uefi-wrapper/UefiWrapper.inf
