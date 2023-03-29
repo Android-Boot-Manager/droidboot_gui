@@ -34,7 +34,10 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     kernel = malloc(strlen("/boot/") + strlen(entry->kernel) + 1);
     initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
-    dtbo = malloc(strlen("/boot/") + strlen(entry->dtbo) + 1);
+    if(entry->dtbo!=NULL)
+        dtbo = malloc(strlen("/boot/") + strlen(entry->dtbo) + 1);
+    else
+        dtbo=NULL;
     options = malloc(strlen(entry->options) + 1);
     strcpy(kernel, "/boot/");
     strcat(kernel, entry->kernel);
