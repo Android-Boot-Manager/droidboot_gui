@@ -24,6 +24,7 @@ struct boot_entry {
 	char *kernel;
 	char *initrd;
     char *dtb;
+    char *dtbo;
 	char *options;
 	char *logo;
 	int error;
@@ -129,6 +130,13 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
 		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'dtb'\n", path);
 		free(buf);
 		return ret;
+	}
+
+	ret = config_parse_option(&entry->dtbo, "dtbo", (const char *)buf);
+	if(ret < 0) {
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'dtb'\n", path);
+        ret=0;
+        entry->dtbo=NULL;
 	}
 
 	ret = config_parse_option(&entry->options, "options", (const char *)buf);

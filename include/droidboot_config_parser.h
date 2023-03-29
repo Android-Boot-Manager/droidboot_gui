@@ -24,6 +24,7 @@ struct boot_entry {
 	char *kernel;
 	char *initrd;
     char *dtb;
+    char *dtbo;
 	char *options;
 	char *logo;
 	int error;

@@ -172,3 +172,35 @@ bool fdt_get_reg(fdt*fdt,int off,int index,uint64_t*base,uint64_t*size){
 bool fdt_get_memory(fdt*fdt,int index,uint64_t*base,uint64_t*size){
 	return fdt?fdt_get_reg(fdt,fdt_path_offset(fdt,"/memory"),index,base,size):false;
 }
+
+droidboot_error droidboot_dtb_update_cmdline(void *dtb_raw, char *cmdline_to_add){
+    int r,off,len=0;
+    char cmdline [4096];
+    droidboot_log(DROIDBOOT_LOG_INFO, "Going to append cmdline\n");
+    //if(!cmdline)return DROIDBOOT_EINVAL;
+    r=fdt_path_offset(dtb_raw,"/chosen");
+    if(r<0){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "get chosen node failed: %s\n", fdt_strerror(r));
+        return r;
+    }
+    off=r;
+    memset(cmdline,0,sizeof(cmdline));
+    const char*fdt_str=fdt_getprop(dtb_raw,r,"bootargs",&len);
+    if(len+strlen(cmdline_to_add)>sizeof(cmdline)){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "Allocated ram for cmdline is: %d, actual size is: %d, error.\n", sizeof(cmdline), len+strlen(cmdline_to_add));
+        return DROIDBOOT_ENOMEM;
+    }
+    if(fdt_str)strncat(cmdline,fdt_str,len);
+    if(cmdline[0])strncat(cmdline," ",1);
+    strncat(cmdline, cmdline_to_add, strlen(cmdline_to_add));
+    droidboot_log(DROIDBOOT_LOG_INFO, "Going to append: %s as final cmdline.\n", cmdline);
+    r=fdt_setprop_string(
+        dtb_raw,
+        off,"bootargs",cmdline
+    );
+    if(r<0){
+        droidboot_log(DROIDBOOT_LOG_ERROR, "update bootargs failed: %s\n", fdt_strerror(r));
+        return r;
+    }
+    return DROIDBOOT_EOK;
+}

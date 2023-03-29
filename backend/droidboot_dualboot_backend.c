@@ -16,31 +16,39 @@
 void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 {
     off_t kernel_raw_size = 0;
-	off_t ramdisk_size = 0;
-	off_t dtb_size = 0;
-	unsigned int dev_null;
-	size_t rb;
-	ext4_file fp;
-	char *kernel;
+    off_t ramdisk_size = 0;
+    off_t dtb_size = 0;
+    off_t dtbo_size = 0;
+    unsigned int dev_null;
+    size_t rb;
+    ext4_file fp;
+    char *kernel;
     char *initrd;
     char *dtb;
+    char *dtbo;
     char *options;
     unsigned char *kernel_raw;
     unsigned char *ramdisk_raw;
     unsigned char *dtb_raw;
+    unsigned char *dtbo_raw;
     kernel = malloc(strlen("/boot/") + strlen(entry->kernel) + 1);
-	initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
+    initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
+    dtbo = malloc(strlen("/boot/") + strlen(entry->dtbo) + 1);
     options = malloc(strlen(entry->options) + 1);
     strcpy(kernel, "/boot/");
-	strcat(kernel, entry->kernel);
-	strcpy(initrd, "/boot/");
-	strcat(initrd, entry->initrd);
+    strcat(kernel, entry->kernel);
+    strcpy(initrd, "/boot/");
+    strcat(initrd, entry->initrd);
     strcpy(dtb, "/boot/");
-	strcat(dtb, entry->dtb);
-	strcpy(options, entry->options);
-	droidboot_log(DROIDBOOT_LOG_TRACE, "booting from ext4 partition 'abm_settings'\n");
-
+    strcat(dtb, entry->dtb);
+    if(entry->dtbo!=NULL){
+        strcpy(dtbo, "/boot/");
+        strcat(dtbo, entry->dtbo);
+    } else dtbo=NULL;
+    strcpy(options, entry->options);
+    droidboot_log(DROIDBOOT_LOG_TRACE, "booting from ext4 partition 'abm_settings'\n");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot, kernel:%s, initrd: %s, dtb: %s, dtbo:%s\n", kernel, initrd, dtb, dtbo);
     if(ext4_fopen (&fp, kernel, "r")!=0)
         droidboot_log(DROIDBOOT_LOG_ERROR, "Failed to open linux( %s\n", kernel);
 
@@ -123,9 +131,34 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
         dtb_size=0;
     }
 
+    if(droidboot_get_dtbo_load_addr()!=NULL && dtbo!=NULL){
+        dtbo_raw=droidboot_get_dtbo_load_addr();
+        droidboot_log(DROIDBOOT_LOG_ERROR, "going to load dtbo\n");
+        ext4_fopen (&fp, dtbo, "r");
+        ext4_fseek(&fp, 0, SEEK_END);
+	    dtbo_size = ext4_ftell(&fp);
+	    ext4_fseek(&fp, 0, SEEK_SET); /* same as rewind(f); */
+	    if (!dtbo_size) {
+	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtbo get size failed, path: %s\n", dtbo);
+		    return;
+	    }
+		if(droidboot_get_dtbo_load_addr()==1){
+			dtbo_raw=malloc(dtbo_size);
+		}
+	    if(ext4_fread(&fp, dtbo_raw, dtbo_size, &rb) < 0) {
+	       droidboot_log(DROIDBOOT_LOG_ERROR, "dtbo load failed\n");
+           return;
+	    }
+	    droidboot_log(DROIDBOOT_LOG_TRACE, "dtbo load done\n");
+		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)dtbo_raw, 16);
+    } else {
+        dtbo_size=0;
+    }
+
+
     // time to umount fs
     ext4_cache_write_back("/boot/", 0);
     ext4_umount("/boot/");
 	droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot linux\n");
-	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, dtb_raw, dtb_size, options);
+	droidboot_platform_boot_linux_from_ram(kernel_raw, kernel_raw_size, ramdisk_raw, ramdisk_size, dtb_raw, dtb_size, dtbo_raw, dtbo_size, options);
 }
