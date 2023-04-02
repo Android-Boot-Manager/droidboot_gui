@@ -48,7 +48,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
     if(entry->dtbo!=NULL){
         strcpy(dtbo, "/boot/");
         strcat(dtbo, entry->dtbo);
-    } else dtbo=NULL;
+    }
     strcpy(options, entry->options);
     droidboot_log(DROIDBOOT_LOG_TRACE, "booting from ext4 partition 'abm_settings'\n");
     droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot, kernel:%s, initrd: %s, dtb: %s, dtbo:%s\n", kernel, initrd, dtb, dtbo);
