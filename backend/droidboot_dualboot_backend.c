@@ -125,8 +125,8 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 			dtb_raw=malloc(dtb_size);
 		}
 	    if(ext4_fread(&fp, dtb_raw, dtb_size, &rb) < 0) {
-	        droidboot_log(DROIDBOOT_LOG_ERROR, "dtb load failed\n");
-           return;
+            droidboot_log(DROIDBOOT_LOG_ERROR, "dtb load failed\n");
+            return;
 	    }
 	    droidboot_log(DROIDBOOT_LOG_TRACE, "dtb load done\n");
 		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)dtb_raw, 16);
@@ -155,6 +155,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	    droidboot_log(DROIDBOOT_LOG_TRACE, "dtbo load done\n");
 		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, (void *)dtbo_raw, 16);
     } else {
+        dtbo_raw=NULL;
         dtbo_size=0;
     }
 
