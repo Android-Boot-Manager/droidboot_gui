@@ -38,7 +38,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
         dtbo = malloc(strlen("/boot/") + strlen(entry->dtbo) + 1);
     else
         dtbo=NULL;
-    options = malloc(strlen(entry->options) + 1);
+    options = malloc(strlen(entry->options) + 1 + strlen(" ABM.bootloader=1 "));
     strcpy(kernel, "/boot/");
     strcat(kernel, entry->kernel);
     strcpy(initrd, "/boot/");
@@ -50,6 +50,7 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
         strcat(dtbo, entry->dtbo);
     }
     strcpy(options, entry->options);
+    strcat(options, " ABM.bootloader=1 ");
     droidboot_log(DROIDBOOT_LOG_TRACE, "booting from ext4 partition 'abm_settings'\n");
     droidboot_log(DROIDBOOT_LOG_TRACE, "Going to boot, kernel:%s, initrd: %s, dtb: %s, dtbo:%s\n", kernel, initrd, dtb, dtbo);
     if(ext4_fopen (&fp, kernel, "r")!=0)
