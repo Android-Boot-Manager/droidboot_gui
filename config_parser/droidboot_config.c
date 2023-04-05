@@ -50,11 +50,14 @@ struct global_config {
 };
 
 int config_parse_option(char **_dest, const char *option, const char *buffer) {
-	char *temp = strstr(buffer, option);
+    char *option_whitespace = malloc(strlen(option)+strlen(" "));
+    strcpy(option_whitespace, option);
+    strcat(option_whitespace, " ");
+	char *temp = strstr(buffer, option_whitespace);
 	if(!temp)
 		return -1;
 
-	temp += strlen(option);
+	temp += strlen(option_whitespace);
 	while (*temp == ' ')
 		temp++;
 	char *newline = strchr(temp, '\n');
