@@ -9,7 +9,10 @@ jobs:
         repo: [
           "Android-Boot-Manager/droidboot_device_volla_yggdrasil",
 #          "Android-Boot-Manager/droidboot_device_volla_yggdrasilx",
+          "Android-Boot-Manager/droidboot_device_planet_astroslide",
           "Android-Boot-Manager/droidboot_device_generic_u-boot",
+          "Android-Boot-Manager/droidboot_device_planet_cosmocom",
+          "Android-Boot-Manager/droidboot_device_planet_geminipda",
           "Android-Boot-Manager/droidboot_device_volla_mimameid",
           "Android-Boot-Manager/droidboot_device_qcom_lk2nd"
         ]
