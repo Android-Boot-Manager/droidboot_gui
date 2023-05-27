@@ -1,5 +1,8 @@
 name: Push submodule update dispatch event to droidboot_device_* repo
-on: [ push, workflow_dispatch ]
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
