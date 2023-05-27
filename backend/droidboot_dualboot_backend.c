@@ -15,22 +15,23 @@
 
 void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 {
-    off_t kernel_raw_size = 0;
-    off_t ramdisk_size = 0;
-    off_t dtb_size = 0;
-    off_t dtbo_size = 0;
+    off_t kernel_raw_size = 0,
+          ramdisk_size = 0,
+          dtb_size = 0,
+          dtbo_size = 0;
     unsigned int dev_null;
     size_t rb;
     ext4_file fp;
-    char *kernel;
-    char *initrd;
-    char *dtb;
-    char *dtbo;
-    char *options;
-    unsigned char *kernel_raw;
-    unsigned char *ramdisk_raw;
-    unsigned char *dtb_raw;
-    unsigned char *dtbo_raw;
+    char *kernel,
+         *initrd,
+         *dtb,
+         *dtbo,
+         *options;
+    unsigned char *kernel_raw,
+                  *ramdisk_raw,
+                  *dtb_raw,
+                  *dtbo_raw;
+
     kernel = malloc(strlen("/boot/") + strlen(entry->kernel) + 1);
     initrd = malloc(strlen("/boot/") + strlen(entry->initrd) + 1);
     dtb = malloc(strlen("/boot/") + strlen(entry->dtb) + 1);
