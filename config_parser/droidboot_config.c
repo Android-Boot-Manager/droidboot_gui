@@ -303,31 +303,31 @@ int parse_global_config(struct global_config *global_config) {
     char *bg_color = NULL;
     ret = config_parse_option(&bg_color, "bg_color", (const char *)buf);
     if(ret<0) global_config->bg_color = 0x000000;
-    else global_config->bg_color = strtoul(bg_color, NULL, 16);
+    else global_config->bg_color = droidboot_strtol(bg_color, NULL, 16);
 
     // Button color
     char *button_color = NULL;
     ret = config_parse_option(&button_color, "button_color", (const char *)buf);
     if(ret<0) global_config->button_color = 0x000000;
-    else global_config->button_color = strtoul(button_color, NULL, 16);
+    else global_config->button_color = droidboot_strtol(button_color, NULL, 16);
 
     // Button text color
     char *button_text_color = NULL;
     ret = config_parse_option(&button_text_color, "button_text_color", (const char *)buf);
     if(ret<0) global_config->button_text_color = 0xffffff;
-    else global_config->button_text_color = strtoul(button_text_color, NULL, 16);
+    else global_config->button_text_color = droidboot_strtol(button_text_color, NULL, 16);
 
     // Button selected color
     char *button_selected_color = NULL;
     ret = config_parse_option(&button_selected_color, "button_selected_color", (const char *)buf);
     if(ret<0) global_config->button_selected_color = 0xff9800;
-    else global_config->button_selected_color = strtoul(button_selected_color, NULL, 16);
+    else global_config->button_selected_color = droidboot_strtol(button_selected_color, NULL, 16);
 
     // Button selected text color
     char *button_selected_text_color = NULL;
     ret = config_parse_option(&button_selected_text_color, "button_selected_text_color", (const char *)buf);
     if(ret<0) global_config->button_selected_text_color = 0x000000;
-    else global_config->button_selected_text_color = strtoul(button_selected_text_color, NULL, 16);
+    else global_config->button_selected_text_color = droidboot_strtol(button_selected_text_color, NULL, 16);
 
     // Border width
     char *border_width = NULL;
@@ -339,13 +339,13 @@ int parse_global_config(struct global_config *global_config) {
     char *border_color = NULL;
     ret = config_parse_option(&border_color, "border_color", (const char *)buf);
     if(ret<0) global_config->border_color = 0xffffff;
-    else global_config->border_color = strtoul(border_color, NULL, 16);
+    else global_config->border_color = droidboot_strtol(border_color, NULL, 16);
 
     // Border selected color
     char *border_selected_color = NULL;
     ret = config_parse_option(&border_selected_color, "border_selected_color", (const char *)buf);
     if(ret<0) global_config->border_selected_color = 0xffffff;
-    else global_config->border_selected_color = strtoul(border_selected_color, NULL, 16);
+    else global_config->border_selected_color = droidboot_strtol(border_selected_color, NULL, 16);
 
     // Button border width
     char *button_border_width = NULL;
@@ -357,13 +357,13 @@ int parse_global_config(struct global_config *global_config) {
     char *button_border_color = NULL;
     ret = config_parse_option(&button_border_color, "button_border_color", (const char *)buf);
     if(ret<0) global_config->button_border_color = 0xffffff;
-    else global_config->button_border_color = strtoul(button_border_color, NULL, 16);
+    else global_config->button_border_color = droidboot_strtol(button_border_color, NULL, 16);
 
     // Button border selected color
     char *button_border_selected_color = NULL;
     ret = config_parse_option(&button_border_selected_color, "button_border_selected_color", (const char *)buf);
     if(ret<0) global_config->button_border_selected_color = 0xffffff;
-    else global_config->button_border_selected_color = strtoul(button_border_selected_color, NULL, 16);
+    else global_config->button_border_selected_color = droidboot_strtol(button_border_selected_color, NULL, 16);
 
     // Radius
     char *radius = NULL;
