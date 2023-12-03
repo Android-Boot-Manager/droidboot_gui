@@ -13,9 +13,16 @@
 struct boot_entry *droidboot_entry_list;
 struct global_config *droidboot_global_config;
 int droidboot_num_of_boot_entries;
+bool lvgl_init_done;
+
+bool get_lvgl_init_done()
+{
+    return lvgl_init_done;
+}
 
 void droidboot_init()
 {
+    lvgl_init_done = false;
     droidboot_log(DROIDBOOT_LOG_TRACE, "Welcome to abm init!\n");
     // Run platform init it should be in drivers init, but get_width/height functions can be used by lvgl_init, and on some platforms you cant use them before plarform init.
     droidboot_error ret = droidboot_platform_init();
@@ -23,6 +30,7 @@ void droidboot_init()
         return;
     droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot: platform init done\n");
     droidboot_lvgl_init();
+    lvgl_init_done = true;
     droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot: lvgl init done\n");
     droidboot_driver_init();
     droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot: driver init done\n");
@@ -35,9 +43,12 @@ void droidboot_show_dualboot_menu()
         return ret;
    */
     
-    // If there is no SD card or we cant mount abm_settings for unknown reason just boot from storage
+    // If there is no SD card and fallback is unsupported fail unconditionally, else just error and continue to fallback
     if(droidboot_get_sd_fail()){
-        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
+        if(droidboot_have_fallback())
+            droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
+        else
+            droidboot_log(DROIDBOOT_LOG_FATAL, "droidboot main: failed to get sd card\n");
         return;
     }
 
@@ -60,5 +71,5 @@ void droidboot_show_dualboot_menu()
     droidboot_style_init(droidboot_global_config);
 
     // Show dualboot menu
-    droidboot_draw_dualboot_menu(droidboot_entry_list, droidboot_global_config, droidboot_num_of_boot_entries); 
+    droidboot_draw_dualboot_menu(droidboot_entry_list, droidboot_global_config, droidboot_num_of_boot_entries);
 }
