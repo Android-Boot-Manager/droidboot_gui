@@ -10,3 +10,6 @@
 
 // DROIDBOOT_LOG_LEVEL can be 0-5 where 0 - trace, 1 - info, 2 - warning, 3 - error, 4 - fail, 5 - nothing
 #define DROIDBOOT_LOG_LEVEL 0
+
+// DROIDBOOT_NO_SD_SUPPORT can be 1 or 0, enables SD less dualboot support
+#define DROIDBOOT_NO_SD_SUPPORT 1

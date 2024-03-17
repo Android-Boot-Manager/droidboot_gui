@@ -43,6 +43,12 @@ struct gpt_header {
 
 uint64_t abm_settings_offset;
 uint64_t abm_settings_blkcnt;
+
+#ifdef DROIDBOOT_NO_SD_SUPPORT
+uint64_t userdata_offset;
+uint64_t userdata_blkcnt;
+#endif
+
 bool parse_done = false;
 
 static droidboot_error validate_mbr_partition(const struct mbr_part *part)
@@ -92,6 +98,9 @@ droidboot_error droidboot_parse_gpt_on_sd()
 {
     droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
 	abm_settings_blkcnt=0;
+#ifdef DROIDBOOT_NO_SD_SUPPORT
+	userdata_blkcnt=0;
+#endif
     if(parse_done){
        return DROIDBOOT_EOK;
     }
@@ -214,11 +223,25 @@ droidboot_error droidboot_parse_gpt_on_sd()
                    abm_settings_offset=first_lba;
                    abm_settings_blkcnt=size;
                 }
-
+#ifdef DROIDBOOT_NO_SD_SUPPORT
+                if(strcmp(name, "userdata")==0){
+                   droidboot_log(DROIDBOOT_LOG_INFO, "FOUND userdata\n");
+                   userdata_offset=first_lba;
+                   userdata_blkcnt=size;
+                }
+#endif
 				//droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
 				// TODO: So something with this part
 			}
 		}
+
+#ifdef DROIDBOOT_NO_SD_SUPPORT
+	if(userdata_blkcnt!=0)
+	{
+		return DROIDBOOT_EOK;
+	}
+#endif
+
 	if(abm_settings_blkcnt==0)
 	{
 		return DROIDBOOT_ENOENT;

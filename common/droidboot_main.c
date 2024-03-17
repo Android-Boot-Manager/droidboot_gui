@@ -48,7 +48,8 @@ void droidboot_show_dualboot_menu()
         if(droidboot_have_fallback())
             droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
         else
-            droidboot_log(DROIDBOOT_LOG_FATAL, "droidboot main: failed to get sd card\n");
+            droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
+        while(1);
         return;
     }
 

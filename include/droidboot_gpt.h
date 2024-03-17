@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <droidboot_config.h>
 #include <droidboot_error.h>
 #include <droidboot_logging.h>
 #include <stdbool.h>
@@ -146,5 +147,10 @@
      
 extern uint64_t abm_settings_offset;
 extern uint64_t abm_settings_blkcnt;
+
+#ifdef DROIDBOOT_NO_SD_SUPPORT
+extern uint64_t userdata_offset;
+extern uint64_t userdata_blkcnt;
+#endif
 
 droidboot_error droidboot_parse_gpt_on_sd();
