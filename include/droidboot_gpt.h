@@ -153,4 +153,9 @@ extern uint64_t userdata_offset;
 extern uint64_t userdata_blkcnt;
 #endif
 
+#ifdef DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT
+extern uint64_t metadata_offset;
+extern uint64_t metadata_blkcnt;
+#endif
+
 droidboot_error droidboot_parse_gpt_on_sd();

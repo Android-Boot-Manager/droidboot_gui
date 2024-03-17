@@ -49,6 +49,11 @@ uint64_t userdata_offset;
 uint64_t userdata_blkcnt;
 #endif
 
+#ifdef DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT
+extern uint64_t metadata_offset;
+extern uint64_t metadata_blkcnt;
+#endif
+
 bool parse_done = false;
 
 static droidboot_error validate_mbr_partition(const struct mbr_part *part)
@@ -228,6 +233,13 @@ droidboot_error droidboot_parse_gpt_on_sd()
                    droidboot_log(DROIDBOOT_LOG_INFO, "FOUND userdata\n");
                    userdata_offset=first_lba;
                    userdata_blkcnt=size;
+                }
+#endif
+#ifdef DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT
+                if(strcmp(name, "metadata")==0){
+                   droidboot_log(DROIDBOOT_LOG_INFO, "FOUND metadata\n");
+                   metadata_offset=first_lba;
+                   metadata_blkcnt=size;
                 }
 #endif
 				//droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);

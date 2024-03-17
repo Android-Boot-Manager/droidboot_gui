@@ -13,3 +13,6 @@
 
 // DROIDBOOT_NO_SD_SUPPORT can be 1 or 0, enables SD less dualboot support
 #define DROIDBOOT_NO_SD_SUPPORT 1
+
+// DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT can be 1 or 0, enables SD less dualboot support, on devices with metadata encrypted data, depends on DROIDBOOT_NO_SD_SUPPORT
+#define DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT 1 
