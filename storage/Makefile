@@ -2,3 +2,4 @@
 #
 
 obj-y += droidboot_gpt.o
+obj-y += droidboot_mapped.o

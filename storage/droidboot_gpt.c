@@ -50,8 +50,8 @@ uint64_t userdata_blkcnt;
 #endif
 
 #ifdef DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT
-extern uint64_t metadata_offset;
-extern uint64_t metadata_blkcnt;
+uint64_t metadata_offset;
+uint64_t metadata_blkcnt;
 #endif
 
 bool parse_done = false;
