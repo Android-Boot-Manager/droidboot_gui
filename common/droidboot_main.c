@@ -45,11 +45,8 @@ void droidboot_show_dualboot_menu()
     
     // If there is no SD card and fallback is unsupported fail unconditionally, else just error and continue to fallback
     if(droidboot_get_sd_fail()){
-        if(droidboot_have_fallback())
-            droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
-        else
-            droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
-        while(1);
+        droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
+        if(!droidboot_have_fallback()) while(1);
         return;
     }
 
