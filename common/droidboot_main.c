@@ -57,7 +57,7 @@ void droidboot_show_dualboot_menu()
 
     // Parse global config
     droidboot_global_config = malloc(sizeof(struct global_config));
-    droidboot_log(DROIDBOOT_LOG_ERROR, "droidboot main: failed to get sd card\n");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: going to parse global configs\n");
     parse_global_config(droidboot_global_config);
     droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot main: parse global config done\n");
 
