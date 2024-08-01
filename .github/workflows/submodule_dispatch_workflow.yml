@@ -16,6 +16,7 @@ jobs:
           "Android-Boot-Manager/droidboot_device_planet_cosmocom",
           "Android-Boot-Manager/droidboot_device_planet_geminipda",
           "Android-Boot-Manager/droidboot_device_volla_mimameid",
+          "Android-Boot-Manager/droidboot_device_yggdrasilx",
           "Android-Boot-Manager/droidboot_device_gigaset_gx4",
           "Android-Boot-Manager/droidboot_device_qcom_lk2nd"
         ]
