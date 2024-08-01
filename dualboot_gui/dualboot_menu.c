@@ -67,7 +67,7 @@ static void disable_autoboot_func(lv_event_t * e)
     no_autoboot = true;
 }
 
-void timeout_handler(lv_timer_t * timer)
+void timeout_handler(lv_timer_t * timer2)
 {
     /*Use the user_data*/
     if(timeout>0 && !no_autoboot){
