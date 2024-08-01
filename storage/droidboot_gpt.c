@@ -101,7 +101,7 @@ partition_parse_gpt_header(const char *buffer, struct gpt_header* header)
 
 droidboot_error droidboot_parse_gpt_on_sd()
 {
-    droidboot_log(DROIDBOOT_LOG_INFO, "Entefr droidboot_parse_gpt_on_sd\n");
+    droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
 	abm_settings_blkcnt=0;
 #ifdef DROIDBOOT_NO_SD_SUPPORT
 	userdata_blkcnt=0;
@@ -125,7 +125,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
         return DROIDBOOT_ENOENT;
     }
 
-    droidboot_log(DROIDBOOT_LOG_INFO, "SD card blkhlen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
+    droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
 
 
     // get a dma aligned and padded block to read info
@@ -152,7 +152,6 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		/* validate each of the partition entries */
 		for (i=0; i < 4; i++) {
 			if (validate_mbr_partition(&part[i]) >= 0) {
-				// TODO: do something wit this partition
 				/* Type 0xEE indicates end of MBR and GPT partitions exist */
 				if(part[i].type==0xee) {
 					gpt_partitions_exist = 1;
@@ -243,7 +242,6 @@ droidboot_error droidboot_parse_gpt_on_sd()
                 }
 #endif
 				//droidboot_log(DROIDBOOT_LOG_INFO, "got part!!!!!!!!!!!!!! '%s' size=%llu!, first lba: %d\n", name, size, first_lba);
-				// TODO: So something with this part
 			}
 		}
 
