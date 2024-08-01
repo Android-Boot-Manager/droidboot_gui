@@ -110,7 +110,7 @@ int fdt_add_memory(void *dtb_raw,uint64_t addr,uint64_t size){
 }
 
 int fdt_add_merge_memory(void *dtb_raw,uint64_t addr,uint64_t size){
-	STATIC uint64_t last_end=0,start=0;
+	static uint64_t last_end=0,start=0;
 	uint64_t end=addr+size;
 	if(size!=0){
 		if(last_end!=addr){
