@@ -1,4 +1,4 @@
-set(LV_CONF_INCLUDE_SIMPLE OFF)
+set(LV_CONF_INCLUDE_SIMPLE OFF CACHE INTERNAL "blah" FORCE)
 add_subdirectory(lib/lvgl)
 
 add_library(droidboot_gui STATIC
@@ -45,7 +45,7 @@ add_library(droidboot_gui STATIC
 		droidboot_platforms/simulator/simulator.c
 		backend/droidboot_drivers.c
 		backend/droidboot_dualboot_backend.c)
-target_link_libraries(droidboot_gui PUBLIC lvgl android log nativehelper)
+target_link_libraries(droidboot_gui PUBLIC lvgl android log jnigraphics)
 add_compile_definitions(PLATFORM_SIMULATOR)
 target_include_directories(droidboot_gui PUBLIC
 		lib/libufdt/sysdeps/include
