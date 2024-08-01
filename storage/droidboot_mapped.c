@@ -93,7 +93,7 @@ void droidboot_read_mapped_file_blocks(const file_metadata *metadata, unsigned l
             // The block is within this range, calculate the actual block to read
             while (remaining_blocks > 0 && logical_block < range_blocks) {
                 unsigned long actual_block_number = range_start + logical_block;
-                dridboot_sd_read_block((void *)buffer + buffer_offset, actual_block_number + metadata->physical_partition_offset, 1);
+                droidboot_sd_read_block((void *)buffer + buffer_offset, actual_block_number + metadata->physical_partition_offset, 1);
 
                 remaining_blocks--;
                 buffer_offset += block_size;

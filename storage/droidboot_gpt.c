@@ -81,7 +81,7 @@ static droidboot_error validate_mbr_partition(const struct mbr_part *part)
  * Return 0 on valid signature
  */
 static unsigned int
-partition_parse_gpt_header(unsigned char *buffer, struct gpt_header* header)
+partition_parse_gpt_header(const char *buffer, struct gpt_header* header)
 {
 	/* Check GPT Signature */
 	if (((uint32_t *) buffer)[0] != GPT_SIGNATURE_2 ||
@@ -135,7 +135,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		unsigned int i, j, n;
 		int gpt_partitions_exist = 0;
 
-		dridboot_sd_read_block(buf, 0, 1);
+		droidboot_sd_read_block(buf, 0, 1);
 
 		/* look for the aa55 tag */
 		//if (buf[510] != 0x55 || buf[511] != 0xaa)
@@ -164,16 +164,16 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		if(!gpt_partitions_exist) return DROIDBOOT_ENOENT;
 		droidboot_log(DROIDBOOT_LOG_INFO, "found GPT\n");
 
-		dridboot_sd_read_block(buf, 1, 1);
+		droidboot_sd_read_block(buf, 1, 1);
 
 		struct gpt_header gpthdr;
-		int err = partition_parse_gpt_header(buf, &gpthdr);
+		uint err = partition_parse_gpt_header(buf, &gpthdr);
 		droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);
 		if (err) {
 			/* Check the backup gpt */
 
 			uint64_t backup_header_lba = droidboot_sd_blkcnt() - 1;
-			dridboot_sd_read_block(buf, backup_header_lba , 1);
+			droidboot_sd_read_block(buf, backup_header_lba , 1);
 
 			err = partition_parse_gpt_header(buf, &gpthdr);
 			if (err) {
@@ -187,7 +187,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		/* Read GPT Entries */
 		droidboot_log(DROIDBOOT_LOG_INFO, "Partition entries offset: %d\n", partition_0);
 		for (i = 0; i < (DROIDBOOT_ROUNDUP(gpthdr.max_partition_count, part_entry_cnt)) / part_entry_cnt; i++) {
-		    dridboot_sd_read_block(buf, 2 + i, 1);
+		    droidboot_sd_read_block(buf, 2 + i, 1);
 		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);
 
 			for (j = 0; j < part_entry_cnt; j++) {

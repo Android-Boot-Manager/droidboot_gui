@@ -16,13 +16,13 @@ file_metadata abm_settings_metadata;
 // Next functions are only for lwext4, usually just wrappers
 static int droidboot_lwext_sd_dev_bread(struct ext4_blockdev *bdev, void *buf, uint32_t blk_id, uint32_t blk_cnt)
 {
-    dridboot_sd_read_block(buf, blk_id, blk_cnt);
+    droidboot_sd_read_block(buf, blk_id, blk_cnt);
     return DROIDBOOT_EOK;
 }
 
 static int droidboot_lwext_sd_dev_bwrite(struct ext4_blockdev *bdev, const void *buf,
 			  uint32_t blk_id, uint32_t blk_cnt){
-    dridboot_sd_write_block(buf, blk_id, blk_cnt);
+    droidboot_sd_write_block(buf, blk_id, blk_cnt);
     return DROIDBOOT_EOK;
 }
 
