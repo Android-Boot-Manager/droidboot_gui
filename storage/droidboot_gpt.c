@@ -101,7 +101,7 @@ partition_parse_gpt_header(const char *buffer, struct gpt_header* header)
 
 droidboot_error droidboot_parse_gpt_on_sd()
 {
-    droidboot_log(DROIDBOOT_LOG_INFO, "Enter droidboot_parse_gpt_on_sd\n");
+    droidboot_log(DROIDBOOT_LOG_INFO, "Entefr droidboot_parse_gpt_on_sd\n");
 	abm_settings_blkcnt=0;
 #ifdef DROIDBOOT_NO_SD_SUPPORT
 	userdata_blkcnt=0;
@@ -125,7 +125,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
         return DROIDBOOT_ENOENT;
     }
 
-    droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
+    droidboot_log(DROIDBOOT_LOG_INFO, "SD card blkhlen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
 
 
     // get a dma aligned and padded block to read info
