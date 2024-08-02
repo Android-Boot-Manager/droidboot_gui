@@ -200,74 +200,77 @@ int parse_global_config(struct global_config *global_config) {
 	ext4_file fp;
 	unsigned char *buf;
 
-    ret = ext4_fopen (&fp, GLOBAL_CONFIG_FILE, "r");
-    if(ret!=0){
-        global_config->default_entry_title = NULL;
-		global_config->timeout = 20;
-        droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: no global config found\n");
-        // Background color
-        global_config->win_bg_color = 0x000000;
+    global_config->default_entry_title = NULL;
+	global_config->timeout = 20;
 
-	    // Radius
-	    global_config->win_radius = 0;
+    // Background color
+    global_config->win_bg_color = 0x000000;
 
-	    // Border width
-	    global_config->win_border_size = 0;
+    // Radius
+    global_config->win_radius = 0;
 
-	    // Border color
-	    global_config->win_border_color = 0xffffff;
+    // Border width
+    global_config->win_border_size = 0;
 
-	    // List background color
-	    global_config->list_bg_color = 0x000000;
+    // Border color
+    global_config->win_border_color = 0xffffff;
 
-	    // List radius
-	    global_config->list_radius = 0;
+    // List background color
+    global_config->list_bg_color = 0x000000;
 
-	    // List border width
-	    global_config->list_border_size = 0;
+    // List radius
+    global_config->list_radius = 0;
 
-	    // List border color
-	    global_config->list_border_color = 0xffffff;
+    // List border width
+    global_config->list_border_size = 0;
 
-        // Button color
-        global_config->button_unselected_color = 0x000000;
+    // List border color
+    global_config->list_border_color = 0xffffff;
 
-        // Button text color
-        global_config->button_unselected_text_color = 0xffffff;
+    // Button color
+    global_config->button_unselected_color = 0x000000;
 
-        // Button selected color
-        global_config->button_selected_color = 0xff9800;
+    // Button text color
+    global_config->button_unselected_text_color = 0xffffff;
 
-        // Button selected text color
-        global_config->button_selected_text_color = 0x000000;
+    // Button selected color
+    global_config->button_selected_color = 0xff9800;
 
-        // Button border width
-        global_config->button_border_unselected_size = 1;
+    // Button selected text color
+    global_config->button_selected_text_color = 0x000000;
 
-        // Button border color
-        global_config->button_border_unselected_color = 0xffffff;
+    // Button border width
+    global_config->button_border_unselected_size = 1;
 
-	    // Button border selected width
-	    global_config->button_border_selected_size = 1;
+    // Button border color
+    global_config->button_border_unselected_color = 0xffffff;
 
-        // Button border selected color
-        global_config->button_border_selected_color = 0xffffff;
+    // Button border selected width
+    global_config->button_border_selected_size = 1;
 
-	    // Button grow by default
-	    global_config->button_grow_default = true;
+    // Button border selected color
+    global_config->button_border_selected_color = 0xffffff;
 
-	    // Button radius
-	    global_config->button_radius = 0;
+    // Button grow by default
+    global_config->button_grow_default = true;
 
-		// Global font size
-	    global_config->global_font_size = 0;
+    // Button radius
+    global_config->button_unselected_radius = 0;
 
-		// Global font name
-		global_config->global_font_name = NULL;
+    // Button selected radius
+    global_config->button_selected_radius = 0;
 
+	// Global font size
+    global_config->global_font_size = 0;
+
+	// Global font name
+	global_config->global_font_name = NULL;
+
+	ret = ext4_fopen (&fp, GLOBAL_CONFIG_FILE, "r");
+	if(ret!=0) {
+		droidboot_log(DROIDBOOT_LOG_WARNING, "config_parser: no global config found\n");
 		return 0;
-
-    }
+	}
 
     ext4_fseek(&fp, 0, SEEK_END);
 	uint64_t fsize = ext4_ftell(&fp);
@@ -280,16 +283,14 @@ int parse_global_config(struct global_config *global_config) {
 	ext4_fclose(&fp);
 	buf[fsize] = '\0';
 
-	ret = config_parse_option(&global_config->default_entry_title, "default", (const char *)buf);
-	if(ret < 0) {
-		global_config->default_entry_title = NULL;
-	}
+	char *default_entry_title = NULL;
+	ret = config_parse_option(&default_entry_title, "default", (const char *)buf);
+	if(ret >= 0) global_config->default_entry_title = default_entry_title;
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: default config parse done\n");
 
     char *timeout = NULL;
     ret = config_parse_option(&timeout, "timeout", (const char *)buf);
-    if(ret<0) global_config->timeout = 20;
-    else global_config->timeout = (int)droidboot_atoi(timeout);
+    if(ret>=0) global_config->timeout = (int)droidboot_atoi(timeout);
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", global_config->timeout);
 
     // Theme parsing
@@ -297,115 +298,113 @@ int parse_global_config(struct global_config *global_config) {
     // Background color
     char *win_bg_color = NULL;
     ret = config_parse_option(&win_bg_color, "win_bg_color", (const char *)buf);
-    if(ret<0) global_config->win_bg_color = 0x000000;
-    else global_config->win_bg_color = droidboot_strtol(win_bg_color, NULL, 16);
+    if(ret>=0) global_config->win_bg_color = droidboot_strtol(win_bg_color, NULL, 16);
 	free(win_bg_color);
 
 	// Radius
 	char *win_radius = NULL;
 	ret = config_parse_option(&win_radius, "win_radius", (const char *)buf);
-	if(ret<0) global_config->win_radius = 0;
-	else global_config->win_radius = droidboot_atoi(win_radius);
+	if(ret>=0) global_config->win_radius = droidboot_atoi(win_radius);
 	free(win_radius);
 
 	// Border width
 	char *win_border_size = NULL;
 	ret = config_parse_option(&win_border_size, "win_border_size", (const char *)buf);
-	if(ret<0) global_config->win_border_size = 0;
-	else global_config->win_border_size = droidboot_atoi(win_border_size);
+	if(ret>=0) global_config->win_border_size = droidboot_atoi(win_border_size);
 	free(win_border_size);
 
 	// Border color
 	char *win_border_color = NULL;
 	ret = config_parse_option(&win_border_color, "win_border_color", (const char *)buf);
-	if(ret<0) global_config->win_border_color = 0xffffff;
-	else global_config->win_border_color = droidboot_strtol(win_border_color, NULL, 16);
+	if(ret>=0) global_config->win_border_color = droidboot_strtol(win_border_color, NULL, 16);
 	free(win_border_color);
 
     // Button unselected color
     char *button_unselected_color = NULL;
     ret = config_parse_option(&button_unselected_color, "button_unselected_color", (const char *)buf);
-    if(ret<0) global_config->button_unselected_color = 0x000000;
-    else global_config->button_unselected_color = droidboot_strtol(button_unselected_color, NULL, 16);
+    if(ret>=0) global_config->button_unselected_color = droidboot_strtol(button_unselected_color, NULL, 16);
 	free(button_unselected_color);
 
     // Button unselected text color
     char *button_unselected_text_color = NULL;
     ret = config_parse_option(&button_unselected_text_color, "button_unselected_text_color", (const char *)buf);
-    if(ret<0) global_config->button_unselected_text_color = 0xffffff;
-    else global_config->button_unselected_text_color = droidboot_strtol(button_unselected_text_color, NULL, 16);
+    if(ret>=0) global_config->button_unselected_text_color = droidboot_strtol(button_unselected_text_color, NULL, 16);
 	free(button_unselected_text_color);
 
     // Button selected color
     char *button_selected_color = NULL;
     ret = config_parse_option(&button_selected_color, "button_selected_color", (const char *)buf);
-    if(ret<0) global_config->button_selected_color = 0xff9800;
-    else global_config->button_selected_color = droidboot_strtol(button_selected_color, NULL, 16);
+    if(ret>=0) global_config->button_selected_color = droidboot_strtol(button_selected_color, NULL, 16);
 	free(button_selected_color);
 
     // Button selected text color
     char *button_selected_text_color = NULL;
     ret = config_parse_option(&button_selected_text_color, "button_selected_text_color", (const char *)buf);
-    if(ret<0) global_config->button_selected_text_color = 0x000000;
-    else global_config->button_selected_text_color = droidboot_strtol(button_selected_text_color, NULL, 16);
+    if(ret>=0) global_config->button_selected_text_color = droidboot_strtol(button_selected_text_color, NULL, 16);
 	free(button_selected_text_color);
 
     // Button border size
     char *button_border_unselected_size = NULL;
     ret = config_parse_option(&button_border_unselected_size, "button_border_unselected_size", (const char *)buf);
-    if(ret<0) global_config->button_border_unselected_size = 1;
-    else global_config->button_border_unselected_size = droidboot_atoi(button_border_unselected_size);
+    if(ret>=0) global_config->button_border_unselected_size = droidboot_atoi(button_border_unselected_size);
 	free(button_border_unselected_size);
 
     // Button border color
     char *button_border_unselected_color = NULL;
     ret = config_parse_option(&button_border_unselected_color, "button_border_unselected_color", (const char *)buf);
-    if(ret<0) global_config->button_border_unselected_color = 0xffffff;
-    else global_config->button_border_unselected_color = droidboot_strtol(button_border_unselected_color, NULL, 16);
+    if(ret>=0) global_config->button_border_unselected_color = droidboot_strtol(button_border_unselected_color, NULL, 16);
 	free(button_border_unselected_color);
 
     // Button border selected color
     char *button_border_selected_color = NULL;
     ret = config_parse_option(&button_border_selected_color, "button_border_selected_color", (const char *)buf);
-    if(ret<0) global_config->button_border_selected_color = 0xffffff;
-    else global_config->button_border_selected_color = droidboot_strtol(button_border_selected_color, NULL, 16);
+    if(ret>=0) global_config->button_border_selected_color = droidboot_strtol(button_border_selected_color, NULL, 16);
 	free(button_border_selected_color);
 
 	// Button border selected size
 	char *button_border_selected_size = NULL;
 	ret = config_parse_option(&button_border_selected_size, "button_border_selected_size", (const char *)buf);
-	if(ret<0) global_config->button_border_selected_size = 1;
-	else global_config->button_border_selected_size = droidboot_atoi(button_border_selected_size);
+	if(ret>=0) global_config->button_border_selected_size = droidboot_atoi(button_border_selected_size);
 	free(button_border_selected_size);
 
     // Button grow by default
     char *button_grow_default = NULL;
     ret = config_parse_option(&button_grow_default, "button_grow_default", (const char *)buf);
-    if(ret < 0 || strcmp(button_grow_default, "true") == 0)
-        global_config->button_grow_default = true;
-    else
-        global_config->button_grow_default = false;
+    if(ret >= 0) {
+	    if (strcmp(button_grow_default, "true") == 0)
+		    global_config->button_grow_default = true;
+	    else
+		    global_config->button_grow_default = false;
+    }
 	free(button_grow_default);
 
 	// Button radius
-	char *button_radius = NULL;
-	ret = config_parse_option(&button_radius, "button_radius", (const char *)buf);
-	if(ret<0) global_config->button_radius = 0;
-	else global_config->button_radius = droidboot_atoi(button_radius);
-	free(button_radius);
+	char *button_unselected_radius = NULL;
+	ret = config_parse_option(&button_unselected_radius, "button_unselected_radius", (const char *)buf);
+	if(ret>=0) global_config->button_unselected_radius = droidboot_atoi(button_unselected_radius);
+	free(button_unselected_radius);
+
+	// Button selected radius
+	char *button_selected_radius = NULL;
+	ret = config_parse_option(&button_selected_radius, "button_selected_radius", (const char *)buf);
+	if(ret>=0) global_config->button_selected_radius = droidboot_atoi(button_selected_radius);
+	free(button_selected_radius);
 
 	// Global font size
 	char *global_font_size = NULL;
 	ret = config_parse_option(&global_font_size, "global_font_size", (const char *)buf);
-	if(ret<0) global_config->global_font_size = 0;
-	else global_config->global_font_size = droidboot_atoi(global_font_size);
+	if(ret>=0) global_config->global_font_size = droidboot_atoi(global_font_size);
 	free(global_font_size);
 
 	// Global font name
 	char *global_font_name = NULL;
 	ret = config_parse_option(&global_font_name, "global_font_name", (const char *)buf);
-	if(ret<0) global_config->global_font_name = NULL;
-	else global_config->global_font_name = global_font_name;
+	if(ret>=0) {
+		if (strlen(global_font_name) == 0)
+			global_config->global_font_name = NULL;
+		else
+			global_config->global_font_name = global_font_name;
+	}
 
 	return 0;
 } 

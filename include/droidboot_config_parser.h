@@ -18,7 +18,8 @@ struct global_config {
 	uint32_t button_unselected_text_color;
 	uint32_t button_selected_color;
 	uint32_t button_selected_text_color;
-	uint8_t button_radius;
+	uint8_t button_unselected_radius;
+	uint8_t button_selected_radius;
 	bool button_grow_default;
 	uint8_t button_border_unselected_size;
 	uint32_t button_border_unselected_color;
