@@ -58,5 +58,3 @@ target_include_directories(droidboot_gui PUBLIC
 		include
 		.
 )
-target_compile_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer)
-target_link_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize=undefined)

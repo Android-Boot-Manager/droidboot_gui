@@ -172,7 +172,6 @@ int get_dualboot_entry_count(void) {
 int parse_boot_entries(struct boot_entry **_entry_list) {
 	int ret;
 	droidboot_log(DROIDBOOT_LOG_TRACE, "hi from entries parse \n");
-    struct boot_entry *entry_list=malloc(sizeof(struct boot_entry)*dir_count_entries(ENTRIES_DIR));    
 
     //ret=ext4_mount("abm_settings", "/boot/", false);
    // if(ret!=DROIDBOOT_EOK)
@@ -185,7 +184,9 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
 	droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: found %d entries\n");
 	if (ret < 0) {
 		entry_count = 0;
+		return ret;
 	}
+	struct boot_entry *entry_list=malloc(sizeof(struct boot_entry)*entry_count);
 
 	const ext4_direntry *de;
     ext4_dir d;

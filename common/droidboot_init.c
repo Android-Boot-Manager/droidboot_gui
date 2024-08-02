@@ -5,7 +5,33 @@
 /*A static variable to store the buffers*/
 static lv_disp_draw_buf_t disp_buf;
 
+static void droidboot_lvgl_print(const char * buf) {
+	droidboot_log_level ll = DROIDBOOT_LOG_ERROR;
+	if (buf[0] == '[' && buf[1] != '\0' && buf[2] != '\0' && buf[3] != '\0' && buf[4] != '\0') {
+		if (buf[5] == ']') {
+			if (buf[1] == 'I' && buf[2] == 'n' && buf[3] == 'f' && buf[4] == 'o') {
+				ll = DROIDBOOT_LOG_TRACE; // LVGL info is relatively useless and equivalent of our TRACE
+			}
+			if (buf[1] == 'U' && buf[2] == 's' && buf[3] == 'e' && buf[4] == 'r') {
+				ll = DROIDBOOT_LOG_ERROR;
+			}
+			if (buf[1] == 'W' && buf[2] == 'a' && buf[3] == 'r' && buf[4] == 'n') {
+				ll = DROIDBOOT_LOG_WARNING;
+			}
+		} else if (buf[5] != '\0' && buf[6] == ']') {
+			if (buf[1] == 'E' && buf[2] == 'r' && buf[3] == 'r' && buf[4] == 'o' && buf[5] == 'r') {
+				ll = DROIDBOOT_LOG_ERROR;
+			}
+			if (buf[1] == 'T' && buf[2] == 'r' && buf[3] == 'a' && buf[4] == 'c' && buf[5] == 'e') {
+				ll = DROIDBOOT_LOG_TRACE;
+			}
+		}
+	}
+	droidboot_log(ll, "%s", buf);
+}
+
 droidboot_error droidboot_lvgl_init(){
+	lv_log_register_print_cb(droidboot_lvgl_print);
     lv_init();
     
     /*Use double buffering*/

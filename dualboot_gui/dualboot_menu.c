@@ -37,6 +37,7 @@ static void event_handler(lv_event_t * e)
     if(code == LV_EVENT_CLICKED) {
         //lvgl_show_boot_logo();
         // Lets firstly write index to metadata
+#ifndef PLATFORM_SIMULATOR
         ext4_file f;
         int ret = ext4_fopen(&f, "/boot/db/last_index", "wb");
        
@@ -44,6 +45,7 @@ static void event_handler(lv_event_t * e)
         sprintf(s,"%u", index);
         ret=ext4_fwrite(&f, s, 128, 0);
         ret=ext4_fclose(&f);
+#endif
         
         if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
@@ -191,14 +193,14 @@ void droidboot_draw_dualboot_menu(struct boot_entry *droidboot_entry_list1, stru
     lv_obj_set_size(win, lv_pct(100), lv_pct(100));
     lv_obj_t * win_title = lv_win_add_title(win, "Select OS"); 
     lv_obj_set_pos(win_title, 0, 0);
-    //lv_obj_add_style(lv_win_get_header(win), &droidboot_win_style, 0);
-    //lv_obj_add_style(win, &droidboot_win_style, 0);
+    lv_obj_add_style(lv_win_get_header(win), &droidboot_win_style, 0);
+    lv_obj_add_style(win, &droidboot_win_style, 0);
 
     lv_obj_t * list1 = lv_list_create(win); 
     lv_obj_set_size(list1, lv_pct(100), lv_pct(100));
     lv_obj_set_pos(list1, 0, 00);
     lv_obj_align(list1, LV_ALIGN_BOTTOM_MID, 0, 0);
-    //lv_obj_add_style(list1, &droidboot_list_style, 0);
+    lv_obj_add_style(list1, &droidboot_list_style, 0);
     droidboot_add_dualboot_menu_buttons(list1);
 
     no_autoboot = false;
