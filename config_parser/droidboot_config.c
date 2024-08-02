@@ -153,7 +153,7 @@ int parse_boot_entry_file(struct boot_entry *entry, const char *file) {
 	if(ret < 0) {
 	    droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: SYNTAX ERROR: entry \"%s\" - no option 'logo'\n", path);
 		ret=0;
-		entry->logo="NULL";
+		entry->logo=NULL;
 	}
 
 	free(buf);
