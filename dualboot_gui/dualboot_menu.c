@@ -31,7 +31,7 @@ struct boot_entry *selected_entry;
 
 static void event_handler(lv_event_t * e)
 {
-    droidboot_log(DROIDBOOT_LOG_INFO, "dualboot menu: got event\n");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "dualboot menu: got event\n");
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_target(e);
     int index = lv_obj_get_child_id(obj);
@@ -57,13 +57,13 @@ static void event_handler(lv_event_t * e)
         no_autoboot=true;
            
         droidboot_exit=1;
-        droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: exit is: %d\n", droidboot_exit);
+        droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot_menu: exit is: %d\n", droidboot_exit);
     }
 }
 
 static void disable_autoboot_func(lv_event_t * e)
 {
-    droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: got event\n");
+    droidboot_log(DROIDBOOT_LOG_TRACE, "droidboot_menu: got event\n");
     no_autoboot = true;
 }
 

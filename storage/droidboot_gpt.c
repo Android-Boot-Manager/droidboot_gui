@@ -130,7 +130,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 
     // get a dma aligned and padded block to read info
 	char *buf = malloc(droidboot_sd_blklen()*2);
-	droidboot_log(DROIDBOOT_LOG_INFO, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
+	droidboot_log(DROIDBOOT_LOG_TRACE, "SD card blklen: %d, blkcnt: %d\n", droidboot_sd_blklen(), droidboot_sd_blkcnt());
 	/* sniff for MBR partition types */
 		unsigned int i, j, n;
 		int gpt_partitions_exist = 0;
@@ -144,9 +144,9 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		/* see if a partition table makes sense here */
 		struct mbr_part part[4];
 		memcpy(part, buf + 446, sizeof(part));
-		droidboot_log(DROIDBOOT_LOG_INFO, "mbr partition table dump:\n");
+		droidboot_log(DROIDBOOT_LOG_TRACE, "mbr partition table dump:\n");
 		for (i=0; i < 4; i++) {
-			droidboot_log(DROIDBOOT_LOG_INFO, "\t%i: status 0x%hhx, type 0x%hhx, start 0x%x, len 0x%x\n", i, part[i].status, part[i].type, part[i].lba_start, part[i].lba_length);
+			droidboot_log(DROIDBOOT_LOG_TRACE, "\t%i: status 0x%hhx, type 0x%hhx, start 0x%x, len 0x%x\n", i, part[i].status, part[i].type, part[i].lba_start, part[i].lba_length);
 		}
 
 		/* validate each of the partition entries */
@@ -184,7 +184,7 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		uint32_t part_entry_cnt = droidboot_sd_blklen() / ENTRY_SIZE;
 		uint64_t partition_0 = GET_LLWORD_FROM_BYTE(&buf[PARTITION_ENTRIES_OFFSET]);
 		/* Read GPT Entries */
-		droidboot_log(DROIDBOOT_LOG_INFO, "Partition entries offset: %d\n", partition_0);
+		droidboot_log(DROIDBOOT_LOG_TRACE, "Partition entries offset: %d\n", partition_0);
 		for (i = 0; i < (DROIDBOOT_ROUNDUP(gpthdr.max_partition_count, part_entry_cnt)) / part_entry_cnt; i++) {
 		    droidboot_sd_read_block(buf, 2 + i, 1);
 		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);

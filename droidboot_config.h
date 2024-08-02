@@ -1,5 +1,5 @@
 #pragma once
-// DROIDBOOT_ON_SCREEN_LOG can be 1 or 0, enables droidboot related loggging on screen, only for debuggigng and early days.
+// DROIDBOOT_ON_SCREEN_LOG can be 0-5 where 0 - trace, 1 - info, 2 - warning, 3 - error, 4 - fail, 5 - nothing
 #define DROIDBOOT_ON_SCREEN_LOG 1
 
 // DROIDBOOT_SYSTEM_LOG can be 1 or 0, enables logging with printf wich is usually handled at platform side. Recomended.
