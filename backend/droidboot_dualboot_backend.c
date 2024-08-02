@@ -93,11 +93,16 @@ void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 	}
     droidboot_log(DROIDBOOT_LOG_TRACE, "ramdisk get size ok\n");
     if(droidboot_get_ramdisk_load_addr()==NULL){
-        ramdisk_raw = malloc(ramdisk_size);
         if(droidboot_append_ramdisk_to_kernel())
         {
+			if(droidboot_get_kernel_load_addr()==NULL) {
+                droidboot_log(DROIDBOOT_LOG_TRACE, "cannot append ramdisk to null kernel\n");
+				return;
+			}
            ramdisk_raw = kernel_raw+kernel_raw_size;
-        }
+        } else {
+            ramdisk_raw = malloc(ramdisk_size);
+		}
     } else {
 		droidboot_log(DROIDBOOT_LOG_INFO, "loading ramdisk at addr %d\n", droidboot_get_ramdisk_load_addr());
         ramdisk_raw = droidboot_get_ramdisk_load_addr();
