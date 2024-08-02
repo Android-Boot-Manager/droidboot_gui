@@ -34,7 +34,7 @@ static void event_handler(lv_event_t * e)
     droidboot_log(DROIDBOOT_LOG_TRACE, "dualboot menu: got event\n");
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t * obj = lv_event_get_target(e);
-    int index = lv_obj_get_child_id(obj);
+    uint32_t index = lv_obj_get_child_id(obj);
     if(code == LV_EVENT_CLICKED) {
         //lvgl_show_boot_logo();
         // Lets firstly write index to metadata
@@ -42,7 +42,7 @@ static void event_handler(lv_event_t * e)
         int ret = ext4_fopen(&f, "/boot/db/last_index", "wb");
        
         char s[128]=""; 
-        sprintf(s,"%ld", index);
+        sprintf(s,"%u", index);
         ret=ext4_fwrite(&f, s, 128, 0);
         ret=ext4_fclose(&f);
         
@@ -99,7 +99,7 @@ void timeout_handler(lv_timer_t * timer2)
         ret=ext4_fclose(&fp);
 	
         droidboot_log(DROIDBOOT_LOG_INFO, "droidboot_menu: last entry is: %s\n", buf);
-        int index = droidboot_atoi(buf);
+        uint index = droidboot_atoi(buf);
         
         if(!strcmp((droidboot_entry_list + index)->kernel, "null"))
         {
@@ -128,8 +128,8 @@ void droidboot_add_dualboot_menu_buttons(lv_obj_t * list1){
         strcat(title, (droidboot_entry_list + i)->title);
         strcat(title, "\n");
 
-        if((droidboot_entry_list + i)->logo!="NULL"){
-            char logo_path[strlen((droidboot_entry_list + i)->logo)+strlen("/boot/"+3)];
+        if((droidboot_entry_list + i)->logo!=NULL){
+            char logo_path[strlen((droidboot_entry_list + i)->logo)+strlen("/boot/")+3];
             strcpy(logo_path, "/boot/");
             strcat(logo_path, (droidboot_entry_list + i)->logo);
             list_btn = lv_list_add_btn(list1, droidboot_load_lvgl_image_from_ext4(logo_path), title);

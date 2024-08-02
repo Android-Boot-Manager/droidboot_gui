@@ -50,7 +50,7 @@ struct global_config {
 };
 
 int config_parse_option(char **_dest, const char *option, const char *buffer) {
-    char *option_whitespace = malloc(strlen(option)+strlen(" "));
+    char *option_whitespace = malloc(strlen(option)+strlen(" ")+1);
     strcpy(option_whitespace, option);
     strcat(option_whitespace, " ");
 	char *temp = strstr(buffer, option_whitespace);
@@ -284,6 +284,7 @@ int parse_global_config(struct global_config *global_config) {
 	ext4_fread(&fp, buf, fsize, NULL);
 
 	ext4_fclose(&fp);
+	buf[fsize] = '\0';
 
 	ret = config_parse_option(&global_config->default_entry_title, "default", (const char *)buf);
 	if(ret < 0) {
