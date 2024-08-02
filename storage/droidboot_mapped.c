@@ -23,7 +23,7 @@ file_metadata droidboot_read_file_metadata(const char *metadata_file_path, unsig
 
     // Move to the end to get the file size
     ext4_fseek(&fp, 0, SEEK_END);
-    long fsize = ext4_ftell(&fp);
+    uint64_t fsize = ext4_ftell(&fp);
     ext4_fseek(&fp, 0, SEEK_SET);
 
     // Allocate memory to read the whole file

@@ -1,5 +1,4 @@
 #include <lvgl.h>
-#include <droidboot_screens.h>
 #include <res/abm_logo.h>
 
 void droidboot_show_boot_logo()

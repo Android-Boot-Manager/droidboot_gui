@@ -6,7 +6,6 @@
 #include <ext4.h>
 
 #include <droidboot_drivers.h>
-#include <droidboot_screens.h>
 #include <droidboot_config_parser.h>
 #include <droidboot_dtb.h>
 
@@ -15,10 +14,10 @@
 
 void droidboot_boot_linux_from_ext4(struct boot_entry *entry)
 {
-    off_t kernel_raw_size = 0;
-    off_t ramdisk_size = 0;
-    off_t dtb_size = 0;
-    off_t dtbo_size = 0;
+    uint64_t kernel_raw_size = 0;
+	uint64_t ramdisk_size = 0;
+	uint64_t dtb_size = 0;
+	uint64_t dtbo_size = 0;
     unsigned int dev_null;
     size_t rb;
     ext4_file fp;

@@ -33,7 +33,7 @@ long droidboot_strtol(const char *restrict nptr, char **restrict endptr, int bas
     _Bool is_neg = 0, overflow = 0;
     /* Need unsigned so (-LONG_MIN) can fit in these: */
     unsigned long n = 0UL, cutoff;
-    int cutlim;
+    unsigned long cutlim;
     if (base < 0 || base == 1 || base > 36) {
         return 0L;
     }

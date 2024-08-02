@@ -82,7 +82,7 @@ droidboot_ret droidboot_driver_init(){
         droidboot_log(DROIDBOOT_LOG_TRACE, "Ext4 mount returns: %d\n", r);
     }
 #ifdef DROIDBOOT_NO_SD_ENCRYPTED_SUPPORT
-    else if(userdata_offset!=0 && metadata_offset!=0){
+    else if(userdata_offset!=0 && metadata_offset!=0) {
         droidboot_metadata_dev.part_offset = metadata_offset * droidboot_sd_blklen();
         droidboot_metadata_dev.bdif->ph_bsize = droidboot_sd_blklen();
         droidboot_metadata_dev.bdif->ph_bcnt = metadata_blkcnt;
@@ -116,7 +116,7 @@ droidboot_ret droidboot_driver_init(){
     }
 #endif
 #ifdef DROIDBOOT_NO_SD_SUPPORT
-    else if(userdata_offset!=0){
+    else if(userdata_offset!=0) {
         droidboot_userdata_settings_dev.part_offset = userdata_offset * droidboot_sd_blklen();
         droidboot_userdata_settings_dev.bdif->ph_bsize = droidboot_sd_blklen();
         droidboot_userdata_settings_dev.bdif->ph_bcnt = userdata_blkcnt;

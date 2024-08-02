@@ -9,6 +9,10 @@
 #include <droidboot_platform_common.h>
 #include <libc-hack.h>
 
+#ifndef __PACKED
+#define __PACKED __attribute__((__packed__))
+#endif
+
 #define DROIDBOOT_ROUNDUP(a, b) (((a) + ((b)-1)) & ~((b)-1))
 #define DROIDBOOT_ROUNDDOWN(a, b) ((a) & ~((b)-1))
 
@@ -190,9 +194,9 @@ droidboot_error droidboot_parse_gpt_on_sd()
 		    droidboot_dump_hex(DROIDBOOT_LOG_TRACE, buf, 16);
 
 			for (j = 0; j < part_entry_cnt; j++) {
-				unsigned char type_guid[PARTITION_TYPE_GUID_SIZE];
-				unsigned char name[MAX_GPT_NAME_SIZE];
-				unsigned char UTF16_name[MAX_GPT_NAME_SIZE];
+				char type_guid[PARTITION_TYPE_GUID_SIZE];
+				char name[MAX_GPT_NAME_SIZE];
+				char UTF16_name[MAX_GPT_NAME_SIZE];
 				uint64_t first_lba, last_lba, size;
 
 				// guid

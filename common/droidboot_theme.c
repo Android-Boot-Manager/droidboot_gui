@@ -7,7 +7,7 @@ lv_style_t droidboot_list_style;
 lv_style_t droidboot_win_style;
 lv_style_t droidboot_list_button_style;
 lv_style_t droidboot_list_button_selected_style;
-lv_style_t droidboot_list_timeout_style;
+//lv_style_t droidboot_list_timeout_style;
 
 void droidboot_style_init(struct global_config *global_config){
     droidboot_log(DROIDBOOT_LOG_TRACE, "Current theme settings: radius: %d, bg_color: %llx, border_width: %d, border_color: %llx \n", global_config->radius, global_config->bg_color, global_config->border_width, global_config->border_color);

@@ -66,7 +66,7 @@ void droidboot_show_dualboot_menu()
     droidboot_log(DROIDBOOT_LOG_INFO, "droidboot main: found %d entries\n", droidboot_num_of_boot_entries);
 
     // Init styles
-    droidboot_style_init(droidboot_global_config);
+    //droidboot_style_init(droidboot_global_config);
 
     // Show dualboot menu
     droidboot_draw_dualboot_menu(droidboot_entry_list, droidboot_global_config, droidboot_num_of_boot_entries);

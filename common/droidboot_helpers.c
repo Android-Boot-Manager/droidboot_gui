@@ -13,11 +13,11 @@ const void* droidboot_load_lvgl_image_from_ext4(char* path){
     }
 
     ext4_fseek(&fp, 0, SEEK_END);
-    off_t entry_file_size = ext4_ftell(&fp);
+	uint64_t entry_file_size = ext4_ftell(&fp);
     ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
 
-    off_t header_len      = sizeof(lv_img_header_t);          // file header struct
-    off_t buf_len         = entry_file_size - header_len;     // file size minus header size
+	uint64_t header_len      = sizeof(lv_img_header_t);          // file header struct
+	uint64_t buf_len         = entry_file_size - header_len;     // file size minus header size
     lv_img_dsc_t* img_dsc = (lv_img_dsc_t*)malloc(sizeof(lv_img_dsc_t));     // image descriptor struct
     unsigned char *buf    = (unsigned char *)malloc(buf_len);                  // pixel data only
 

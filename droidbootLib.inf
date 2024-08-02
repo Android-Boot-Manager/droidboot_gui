@@ -30,7 +30,6 @@
   common/droidboot_init.c
   common/droidboot_logging.c
   common/droidboot_main.c
-  common/droidboot_screens.c
   common/droidboot_stdfunc.c
   common/droidboot_theme.c
   config_parser/droidboot_config.c

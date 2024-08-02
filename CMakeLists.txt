@@ -30,7 +30,6 @@ add_library(droidboot_gui STATIC
 		common/droidboot_init.c
 		common/droidboot_logging.c
 		common/droidboot_main.c
-		common/droidboot_screens.c
 		common/droidboot_stdfunc.c
 		common/droidboot_theme.c
 		storage/droidboot_gpt.c
@@ -59,5 +58,5 @@ target_include_directories(droidboot_gui PUBLIC
 		include
 		.
 )
-target_compile_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize-recover=address -fno-omit-frame-pointer)
-target_link_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize-recover=address)
+target_compile_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer)
+target_link_options(droidboot_gui PUBLIC -fsanitize=address -fsanitize=undefined)

@@ -75,7 +75,7 @@ int config_parse_option(char **_dest, const char *option, const char *buffer) {
 	return 0;
 }
 
-int parse_boot_entry_file(struct boot_entry *entry, char *file) {
+int parse_boot_entry_file(struct boot_entry *entry, const char *file) {
 	int ret;
 	ext4_file fp;
 	size_t rb;
@@ -87,7 +87,7 @@ int parse_boot_entry_file(struct boot_entry *entry, char *file) {
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: Going to parse file: %s\n", path);
     ret=ext4_fopen (&fp, path, "r");
     ext4_fseek(&fp, 0, SEEK_END);
-    off_t entry_file_size = ext4_ftell(&fp);
+	uint64_t entry_file_size = ext4_ftell(&fp);
     ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
     
 	buf = malloc(entry_file_size + 1);
@@ -202,7 +202,7 @@ int parse_boot_entries(struct boot_entry **_entry_list) {
 	     droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: Found direntry in entries dir\n");
          if(de->inode_type==1){
             struct boot_entry *entry = (entry_list+i);
-            ret = parse_boot_entry_file(entry, de->name);
+            ret = parse_boot_entry_file(entry, (const char*)de->name);
             droidboot_log(DROIDBOOT_LOG_TRACE, "config_parser: found file in entries dir\n");
             if(ret < 0) {
                 entry->error = true;
@@ -276,7 +276,7 @@ int parse_global_config(struct global_config *global_config) {
     }
 
     ext4_fseek(&fp, 0, SEEK_END);
-    long fsize = ext4_ftell(&fp);
+	uint64_t fsize = ext4_ftell(&fp);
     ext4_fseek(&fp, 0, SEEK_SET);  /* same as rewind(f); */
     
     buf = malloc(fsize + 1);
@@ -294,8 +294,8 @@ int parse_global_config(struct global_config *global_config) {
 
     char *timeout = NULL;
     ret = config_parse_option(&timeout, "timeout", (const char *)buf);
-    if(ret<0) global_config->timeout =20;
-    else global_config->timeout = droidboot_atoi(timeout);
+    if(ret<0) global_config->timeout = 20;
+    else global_config->timeout = (int)droidboot_atoi(timeout);
     droidboot_log(DROIDBOOT_LOG_INFO, "config_parser: timeout is: %d seconds\n", global_config->timeout);
 
     // Theme parsing
@@ -375,12 +375,10 @@ int parse_global_config(struct global_config *global_config) {
     // Button grow by default
     char *button_grow_default = NULL;
     ret = config_parse_option(&button_grow_default, "button_grow_default", (const char *)buf);
-    if(ret<0) global_config->button_grow_default = true;
+    if(ret < 0 || strcmp(button_grow_default, "true") == 0)
+        global_config->button_grow_default = true;
     else
-        if(button_grow_default=="true")
-            global_config->button_grow_default = true;
-        else
-            global_config->button_grow_default = false;
+        global_config->button_grow_default = false;
 
 	return 0;
 } 

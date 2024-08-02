@@ -8,7 +8,7 @@
 
 #define MAGIC_KERNEL_ARM64 0x644d5241
 
-droidboot_error droidboot_kernel_prepear(void* loaded_kernel, off_t kernel_raw_size, void* target_kernel, off_t max_kernel_size, off_t* kernel_actual_size)
+droidboot_error droidboot_kernel_prepear(void* loaded_kernel, uint64_t kernel_raw_size, void* target_kernel, uint64_t max_kernel_size, uint64_t* kernel_actual_size)
 {
     int ret;
     if(kernel_raw_size<=64) return DROIDBOOT_EINVAL;
@@ -33,7 +33,7 @@ droidboot_error droidboot_kernel_prepear(void* loaded_kernel, off_t kernel_raw_s
     if(ret!=0)
         return ret;
     *kernel_actual_size = mini_gz_unpack(&gz, target_kernel, max_kernel_size);
-    if(kernel_actual_size<=64) return DROIDBOOT_EINVAL;
+    if(*kernel_actual_size<=64) return DROIDBOOT_EINVAL;
     magic=*(uint32_t*)(target_kernel+0x38);
     if(magic==MAGIC_KERNEL_ARM64){
         droidboot_log(DROIDBOOT_LOG_INFO, "Kernel signature is correct\n");
